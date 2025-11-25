@@ -151,6 +151,7 @@ class Game():
         if np.array_equal(self.snake.body[0], self.food.position):
             self.food.position = self.food.GenerateRandomPos(self.snake.body)
             self.snake.addSegment = True
+            self.reward = 10
 
     def CheckCollisionWithEdges(self):
 
