@@ -140,7 +140,11 @@ class Game():
         if(elementInList(self.snake.body[0], headlessBody)):
             self.GameOver()
 
+    def CheckDanger(self, point: np.ndarray) -> bool:
+        tailHit = elementInList(point, self.snake.body)
+        edgeHit = point[0] == -1 or point[0] == cell_count or point[1] == -1 or point[1] == cell_count
 
+        return tailHit or edgeHit
 
 
     def GameOver(self):
