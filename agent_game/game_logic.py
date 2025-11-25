@@ -64,9 +64,12 @@ class Snake():
             screen.blit(square.surf, (x * cell_size, y * cell_size))
     
 
-    def Update(self):
+    def Update(self, action):
 
-        self.body.insert(0, self.body[0] + self.direction)
+        self.RotateDirection(action)
+        self.head = self.body[0] + self.direction
+        self.body.insert(0, self.head)
+        
 
         if self.addSegment:
             self.addSegment = False
@@ -74,9 +77,19 @@ class Snake():
             self.body.pop()
 
     def Reset(self):
+        self.head = np.array([3,3])
         self.body = [np.array([3,3]), np.array([2,3]), np.array([1,3])]
-        self.direction = NONE
+        self.direction = np.array([1, 0])
 
+    def RotateDirection(self, action):
+        if action == LEFT:
+            self.direction =  self.direction @ np.array([[0, -1], [1, 0]])
+        elif action == STRAIGHT:
+            pass
+        elif action == RIGHT:
+            self.direction =  self.direction @ np.array([[0, 1], [-1, 0]])
+
+        
 
 class Food():
 
