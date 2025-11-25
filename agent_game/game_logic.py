@@ -159,42 +159,49 @@ WindowShouldClose = False
 while not WindowShouldClose:
 
 
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            WindowShouldClose = True
 
-        if event.type == pygame.KEYDOWN:
-            print(game.snake.direction)
+if __name__ == "__main__":
+        
+    game = Game()
 
-            if event.key == pygame.K_ESCAPE:
-                WindowShouldClose = True
 
-            if event.key == pygame.K_UP and (game.snake.direction != DOWN).any() and not inputGiven:
-                game.snake.direction = UP
-                game.running = True
-                inputGiven = True
-            if event.key == pygame.K_RIGHT and (game.snake.direction != LEFT).any() and not inputGiven:
-                game.snake.direction = RIGHT
-                game.running = True
-                inputGiven = True
-            if event.key == pygame.K_DOWN and (game.snake.direction != UP).any() and not inputGiven:
-                game.snake.direction = DOWN
-                game.running = True
-                inputGiven = True
-            if event.key == pygame.K_LEFT and (game.snake.direction != RIGHT).any() and not inputGiven:
-                game.snake.direction = LEFT
-                game.running = True
-                inputGiven = True
-
-    if eventTriggered(0.1):
-        if game.running:
-            game.Update()
-            inputGiven = False
+    LEFT = 0
+    STRAIGHT = 1
+    RIGHT = 2
+    action = STRAIGHT
 
     screen.fill(colorGreen)
     game.snake.Draw()
     game.food.Draw()
 
     pygame.display.flip()
-pygame.quit()
+                
 
+    WindowShouldClose = False
+    while not WindowShouldClose:
+
+
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                WindowShouldClose = True
+
+            if event.type == pygame.KEYDOWN:
+
+                if event.key == pygame.K_ESCAPE:
+                    WindowShouldClose = True
+
+                if event.key == pygame.K_UP:
+                    action = STRAIGHT
+                if event.key == pygame.K_RIGHT:
+                    action = RIGHT
+                if event.key == pygame.K_LEFT:
+                    action = LEFT
+
+                game.Step(action)
+
+                screen.fill(colorGreen)
+                game.snake.Draw()
+                game.food.Draw()
+
+            pygame.display.flip()
+    pygame.quit()
