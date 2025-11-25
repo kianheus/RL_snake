@@ -115,13 +115,16 @@ class Game():
         self.food.Draw()
         self.snake.Draw()
     
-    def Update(self):
+    def Step(self, action):
 
-        if self.running:
-            self.snake.Update()
-            self.CheckCollisionWithFood()
-            self.CheckCollisionWithEdges()
-            self.CheckCollisionWithTail()
+        screen.fill(colorGreen)
+        self.Draw()
+        pygame.display.flip()
+
+        self.snake.Update(action)
+        self.CheckCollisionWithFood()
+        self.CheckCollisionWithEdges()
+        self.CheckCollisionWithTail()
 
     def CheckCollisionWithFood(self):
 
