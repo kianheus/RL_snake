@@ -140,15 +140,13 @@ class Game():
         if(elementInList(self.snake.body[0], headlessBody)):
             self.GameOver()
 
-    def GameOver(self):
 
+
+
+    def GameOver(self):
+        self.reward = 10
         self.snake.Reset()
         self.food.position = self.food.GenerateRandomPos(self.snake.body)
-        self.running = False
-
-game = Game()
-
-
 
 
 if __name__ == "__main__":
