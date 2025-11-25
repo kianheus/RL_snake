@@ -122,7 +122,14 @@ class Game():
     def __init__(self):
         self.snake = Snake()
         self.food = Food(self.snake.body)
-        self.running = False
+        
+
+    def Reset(self):
+        self.snake.Reset()
+        self.food.position = self.food.GenerateRandomPos(self.snake.body)
+        self.score = 0
+        self.frame_iteration = 0
+
 
     def Draw(self):
         self.food.Draw()
