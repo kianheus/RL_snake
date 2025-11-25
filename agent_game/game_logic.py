@@ -10,12 +10,6 @@ cell_size = 30
 cell_count = 20
 window_size = cell_size * cell_count
 
-UP = np.array([0, -1])
-RIGHT = np.array([1, 0])
-DOWN = np.array([0, 1])
-LEFT = np.array([-1, 0])
-NONE = np.array([0, 0])
-
 
 pygame.init()
 
@@ -154,9 +148,6 @@ class Game():
 
 game = Game()
 
-inputGiven = False
-WindowShouldClose = False
-while not WindowShouldClose:
 
 
 
