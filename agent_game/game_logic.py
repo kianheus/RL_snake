@@ -49,6 +49,8 @@ class Square():
         self.surf = pygame.Surface((cell_size, cell_size))
         self.surf.fill(colorDarkGreen)
 
+
+
 class Snake():
 
     def __init__(self):
@@ -101,14 +103,12 @@ class Food():
 
 
     def Draw(self):
-
         screen.blit(self.image, (self.position*cell_size, self.position*cell_size))
 
     def GenerateRandomCell(self) -> np.ndarray:
         return np.random.randint(0, cell_count, size=2)
     
     def GenerateRandomPos(self, snakeBody: List[np.ndarray]) -> np.ndarray:
-
         position = self.GenerateRandomCell()
 
         while elementInList(position, snakeBody):
