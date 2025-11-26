@@ -29,18 +29,6 @@ def elementInList(element: np.ndarray, list: List[np.ndarray]) -> bool:
 
     return False
 
-def eventTriggered(interval: float) -> bool:
-    global lastUpdateTime
-
-    currentTime = time.time()
-
-    
-    if (currentTime - lastUpdateTime) >= interval:
-
-        lastUpdateTime = currentTime
-        return True
-    else:
-        return False
 
 
 class Square():
