@@ -1,7 +1,10 @@
 import torch
+import time
 import random
 import numpy as np
 from collections import deque
+import warnings
+warnings.filterwarnings("ignore", module="pygame")
 
 from game_logic import Game 
 from model import Linear_QNet, QTrainer
@@ -103,7 +106,6 @@ class Agent():
             prediction = self.model.forward(state0)
             move = torch.argmax(prediction).item()
             final_move[move] = 1
-        print("final move: ", final_move)
         return final_move
 
 
@@ -121,8 +123,10 @@ def train():
         # Get move
         final_action = agent.get_action(state_old)
 
+
         # Perform move and get new state
         reward, done, score = game.Step(final_action)
+
 
         state_new = agent.Get_State(game)
 
@@ -139,6 +143,7 @@ def train():
             game.Reset()
             agent.n_games += 1
             agent.train_long_memory()
+            print("Memory size:", len(agent.memory))
 
             if score > record:
                 record = score
@@ -152,6 +157,8 @@ def train():
             plot_mean_scores.append(mean_score)
             plot(plot_scores, plot_mean_scores)
 
+        if agent.n_games >= 80:
+            time.sleep(0.05)
 
 if __name__ == "__main__":
     train()
