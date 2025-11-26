@@ -74,8 +74,10 @@ class Snake():
             self.body.pop()
 
     def Reset(self):
-        self.head = np.array([3,3])
-        self.body = [np.array([3,3]), np.array([2,3]), np.array([1,3])]
+        start_x = np.random.randint(3, cell_count)
+        start_y = np.random.randint(0, cell_count)
+        self.head = np.array([start_x, start_y])
+        self.body = [np.array([start_x, start_y]), np.array([start_x-1, start_y]), np.array([start_x-2, start_y])]
         self.direction = np.array([1, 0])
 
     def RotateDirection(self, action):
