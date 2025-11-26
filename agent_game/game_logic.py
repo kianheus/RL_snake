@@ -29,6 +29,9 @@ def elementInList(element: np.ndarray, list: List[np.ndarray]) -> bool:
 
     return False
 
+def manhattanDistance(element1: np.ndarray, element2: np.ndarray) -> int:
+    dist = np.sum(np.abs(element1 - element2))
+    return dist
 
 
 class Square():
