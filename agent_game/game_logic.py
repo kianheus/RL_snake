@@ -10,6 +10,10 @@ cell_size = 30
 cell_count = 20
 window_size = cell_size * cell_count
 
+LEFT = [1, 0, 0]
+STRAIGHT = [0, 1, 0]
+RIGHT = [0, 0, 1]
+
 
 pygame.init()
 
@@ -113,13 +117,18 @@ class Game():
     def __init__(self):
         self.snake = Snake()
         self.food = Food(self.snake.body)
+        self.frame_iteration = 0
+        self.score = 0
+        self.done = False
+        
         
 
     def Reset(self):
         self.snake.Reset()
         self.food.position = self.food.GenerateRandomPos(self.snake.body)
-        self.score = 0
         self.frame_iteration = 0
+        self.score = 0
+        self.done = False
 
 
     def Draw(self):
@@ -127,6 +136,8 @@ class Game():
         self.snake.Draw()
     
     def Step(self, action):
+        self.frame_iteration += 1
+        self.reward = 0
 
         screen.fill(colorGreen)
         self.Draw()
@@ -136,6 +147,16 @@ class Game():
         self.CheckCollisionWithFood()
         self.CheckCollisionWithEdges()
         self.CheckCollisionWithTail()
+        self.FoodDistanceReward()
+
+        return self.reward, self.done, self.score
+    
+    def FoodDistanceReward(self):
+        currentDist = manhattanDistance(self.snake.body[0], self.food.position)
+        prevDist = manhattanDistance(self.snake.body[1], self.food.position)
+        
+        if currentDist < prevDist:
+            self.reward += 0.3
 
     def CheckCollisionWithFood(self):
 
@@ -143,12 +164,13 @@ class Game():
             self.food.position = self.food.GenerateRandomPos(self.snake.body)
             self.snake.addSegment = True
             self.reward = 10
+            self.score += 1
 
     def CheckCollisionWithEdges(self):
 
         if self.snake.body[0][0] == -1 or self.snake.body[0][0] == cell_count or self.snake.body[0][1] == -1 or self.snake.body[0][1] == cell_count:
             self.GameOver()
-
+    
     def CheckCollisionWithTail(self):
 
         headlessBody = self.snake.body[1::]
@@ -163,19 +185,17 @@ class Game():
 
 
     def GameOver(self):
-        self.reward = 10
-        self.snake.Reset()
+        self.reward = -10
+        self.done = True
         self.food.position = self.food.GenerateRandomPos(self.snake.body)
+        self.snake.Reset()
+        
 
 
 if __name__ == "__main__":
-        
+    
     game = Game()
 
-
-    LEFT = 0
-    STRAIGHT = 1
-    RIGHT = 2
     action = STRAIGHT
 
     screen.fill(colorGreen)
@@ -205,7 +225,9 @@ if __name__ == "__main__":
                 if event.key == pygame.K_LEFT:
                     action = LEFT
 
-                game.Step(action)
+                reward, done, score = game.Step(action)
+
+                print("reward:", reward, ", done:", done, ", score:", score)
 
                 screen.fill(colorGreen)
                 game.snake.Draw()
