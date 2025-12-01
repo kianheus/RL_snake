@@ -151,6 +151,9 @@ class Game():
         self.CheckCollisionWithTail()
         self.FoodDistanceReward()
 
+        if self.frame_iteration > 100 * len(self.snake.body):
+            self.GameOver()
+
         return self.reward, self.done, self.score
     
     def FoodDistanceReward(self):
