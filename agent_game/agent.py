@@ -1,4 +1,5 @@
 import torch
+import pygame
 import time
 import random
 import numpy as np
@@ -118,6 +119,13 @@ def train():
     game = Game()
 
     while True:
+
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                quit()
+
+
         # Get old state
         state_old = agent.Get_State(game)
         # Get move
