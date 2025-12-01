@@ -49,17 +49,19 @@ class QTrainer():
 
         # 1: Get predcited Q values with current state
         pred = self.model(state)
-
+        next_q = self.model(next_state)
         target = pred.clone()
 
         for idx in range(len(done)):
-            Q_new = reward[idx]
-            if not done[idx]:
-                Q_new = reward[idx] + self.gamma * torch.max(self.model(next_state))
+            
+            if not done[idx]: # 2: Apply r + y * max(next_predicted Q values)
+                Q_new = reward[idx] + self.gamma * torch.max(next_q[idx])
+            else:
+                Q_new = reward[idx]
 
             target[idx][torch.argmax(action[idx]).item()] = Q_new
 
-        # 2: Apply r + y * max(next_predicted Q values)
+        
         
         self.optimizer.zero_grad()
         loss = self.criterion(target, pred)
