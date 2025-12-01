@@ -12,7 +12,7 @@ from model import Linear_QNet, QTrainer
 from plotter import plot
 
 
-MAX_MEMORY = 100_000
+MAX_MEMORY = 10000
 BATCH_SIZE = 1000
 LR = 0.001
 
