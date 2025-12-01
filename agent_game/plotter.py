@@ -11,7 +11,7 @@ def plot(scores, mean_scores):
     ax.set_title("Training...")
     ax.set_xlabel("Number of games")
     ax.set_ylabel("Score")
-    ax.plot(scores)
+    ax.scatter(range(len(scores)), scores, c="orange")
     ax.plot(mean_scores)
     ax.set_ylim(ymin=0)
     ax.text(len(scores)-1, scores[-1], str(scores[-1]))
