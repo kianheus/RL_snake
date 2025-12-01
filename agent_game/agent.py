@@ -114,6 +114,7 @@ def train():
     plot_scores = []
     plot_mean_scores = []
     total_score = 0
+    mean_window = 10
     record = 0
     agent = Agent()
     game = Game()
@@ -161,7 +162,11 @@ def train():
 
             plot_scores.append(score)
             total_score += score
-            mean_score = total_score / agent.n_games
+            if agent.n_games < mean_window:
+                mean_score = total_score / agent.n_games
+            else:
+                mean_score = sum(plot_scores[-mean_window::])/mean_window
+
             plot_mean_scores.append(mean_score)
             plot(plot_scores, plot_mean_scores)
 
