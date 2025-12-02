@@ -7,7 +7,7 @@ from collections import deque
 import warnings
 warnings.filterwarnings("ignore", module="pygame")
 
-from game_logic import Game 
+from game_logic import Game
 from model import Linear_QNet, QTrainer
 from plotter import plot
 
@@ -28,7 +28,7 @@ class Agent():
         self.epsilon = 0
         self.gamma = 0.9 # Discount rate (<1)
         self.memory = deque(maxlen=MAX_MEMORY)
-        self.model = Linear_QNet(11, 256, 3)
+        self.model = Linear_QNet(11, 128, 3)
         self.trainer = QTrainer(self.model, lr=LR, gamma=self.gamma)
 
     def Get_State(self, game: Game):
