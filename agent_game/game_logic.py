@@ -161,7 +161,7 @@ class Game():
         prevDist = manhattanDistance(self.snake.body[1], self.food.position)
         
         if currentDist < prevDist:
-            self.reward += 0.3
+            self.reward += 2
 
     def CheckCollisionWithFood(self):
 
