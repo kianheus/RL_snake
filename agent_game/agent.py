@@ -16,9 +16,9 @@ MAX_MEMORY = 10000
 BATCH_SIZE = 1000
 LR = 0.001
 
-NORTH = np.array([0, 1])
+NORTH = np.array([0, -1])
 EAST = np.array([1, 0])
-SOUTH = np.array([0, -1])
+SOUTH = np.array([0, 1])
 WEST = np.array([-1, 0])
 
 class Agent():
