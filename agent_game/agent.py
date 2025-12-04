@@ -30,7 +30,12 @@ class Agent():
         self.gamma = 0.9 # Discount rate (<1)
         self.memory = deque(maxlen=MAX_MEMORY)
         self.model = Linear_QNet(11, 128, 3)
-        self.trainer = QTrainer(self.model, lr=LR, gamma=self.gamma)
+
+        self.target_model = Linear_QNet(11, 128, 3)
+        self.target_model.load_state_dict(self.model.state_dict())
+        self.target_model.eval()
+
+        self.trainer = QTrainer(self.model, self.target_model, lr=LR, gamma=self.gamma)
 
     def Get_State(self, game: Game):
         head = game.snake.body[0]
@@ -132,6 +137,9 @@ def train():
         state_old = agent.Get_State(game)
         # Get move
         final_action = agent.get_action(state_old)
+
+        if agent.n_games % 10 == 0:
+            agent.target_model.load_state_dict(agent.model.state_dict())
 
 
         # Perform move and get new state
