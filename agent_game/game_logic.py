@@ -217,7 +217,7 @@ class Game():
 
 
     def GameOver(self):
-        self.reward = -10
+        self.reward = -30
         self.done = True
         self.food.position = self.food.GenerateRandomPos(self.snake.body)
         self.snake.Reset()
