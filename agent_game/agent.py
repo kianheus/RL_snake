@@ -5,12 +5,13 @@ import random
 import numpy as np
 from collections import deque
 import warnings
-warnings.filterwarnings("ignore", module="pygame")
 
 from game_logic import Game
 from model import Linear_QNet, QTrainer
 from plotter import plot
 
+device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+warnings.filterwarnings("ignore", module="pygame")
 
 MAX_MEMORY = 10000
 BATCH_SIZE = 1000
@@ -80,7 +81,7 @@ class Agent():
         
 
     def remember(self, state, action, reward, next_state, done):
-        self.memory.append((state, action, reward, next_state, done)) # Pops left if max memory is reached
+        self.memory.append((state, action, reward, next_state, done))
 
     def train_long_memory(self):
         if len(self.memory) > BATCH_SIZE:
@@ -103,7 +104,7 @@ class Agent():
             move = random.randint(0, 2)
             final_move[move] = 1
         else:
-            state0 = torch.tensor(state, dtype = torch.float)
+            state0 = torch.tensor(state, dtype = torch.float, device=device)
             prediction = self.model.forward(state0)
             move = torch.argmax(prediction).item()
             final_move[move] = 1
@@ -114,7 +115,7 @@ def train():
     plot_scores = []
     plot_mean_scores = []
     total_score = 0
-    mean_window = 10
+    mean_window = 100
     record = 0
     agent = Agent()
     game = Game(control_type="relative")
@@ -124,7 +125,7 @@ def train():
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
-                quit()
+                return record
 
 
         # Get old state
@@ -151,8 +152,7 @@ def train():
             # Train long memory
             game.Reset()
             agent.n_games += 1
-            agent.train_long_memory()
-            print("Memory size:", len(agent.memory))
+            loss = agent.train_long_memory()
 
             if score > record:
                 record = score
