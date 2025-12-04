@@ -35,8 +35,9 @@ class Linear_QNet(nn.Module):
 
 
 class QTrainer():
-    def __init__(self, model, lr, gamma):
+    def __init__(self, model, target_model, lr, gamma):
         self.model = model
+        self.target_model = target_model
         self.lr = lr
         self.gamma = gamma
         self.optimizer = optim.Adam(model.parameters(), lr=self.lr)
@@ -61,10 +62,13 @@ class QTrainer():
         next_q = self.model(next_state)
         target = pred.clone()
 
+        with torch.no_grad():
+            next_q_target = self.target_model(next_state)
+
         for idx in range(len(done)):
             
             if not done[idx]: # 2: Apply r + y * max(next_predicted Q values)
-                Q_new = reward[idx] + self.gamma * torch.max(next_q[idx])
+                Q_new = reward[idx] + self.gamma * torch.max(next_q_target[idx])
             else:
                 Q_new = reward[idx]
 
