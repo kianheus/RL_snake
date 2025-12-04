@@ -153,6 +153,7 @@ class Game():
         self.Draw()
         pygame.display.flip()
 
+        self.CheckConnected()
         self.snake.Update(action, self.control_type)
         self.CheckCollisionWithFood()
         self.CheckCollisionWithEdges()
@@ -170,6 +171,24 @@ class Game():
         
         if currentDist < prevDist:
             self.reward += 2
+
+    def Occupance_Grid(self):
+        
+        grid = np.zeros((cell_count,cell_count), dtype=int)
+        
+        for part in self.snake.body:
+            grid[part[0], part[1]] = 1
+        
+        return grid
+
+    def CheckConnected(self):
+        occupance_grid = self.Occupance_Grid()
+
+        free_connected = check_reachable(occupance_grid)
+
+        if not free_connected:
+            self.reward -= 5
+
 
     def CheckCollisionWithFood(self):
 
