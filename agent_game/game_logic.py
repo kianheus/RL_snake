@@ -15,6 +15,17 @@ LEFT = [1, 0, 0]
 STRAIGHT = [0, 1, 0]
 RIGHT = [0, 0, 1]
 
+NORTH = np.array([0, -1])
+EAST = np.array([1, 0])
+SOUTH = np.array([0, 1])
+WEST = np.array([-1, 0])
+
+DIRECTIONS = [
+    NORTH,
+    EAST,
+    SOUTH,
+    WEST
+]
 
 pygame.init()
 
