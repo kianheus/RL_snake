@@ -13,16 +13,14 @@ class Linear_QNet(nn.Module):
         self.linear1 = nn.Linear(input_size, hidden_size)
         self.linear2 = nn.Linear(hidden_size, hidden_size)
         self.linear3 = nn.Linear(hidden_size, hidden_size//2)
-        self.linear4 = nn.Linear(hidden_size//2, hidden_size//4)
-        self.linear5 = nn.Linear(hidden_size//4, output_size)
+        self.linear4 = nn.Linear(hidden_size//2, output_size)
         self.to(device)
 
     def forward(self, x):
         x = F.relu(self.linear1(x))
         x = F.relu(self.linear2(x))
         x = F.relu(self.linear3(x))
-        x = F.relu(self.linear4(x))
-        x = self.linear5(x)
+        x = self.linear4(x)
         return x
     
     def save(self, file_name="model.pth"):
@@ -60,7 +58,7 @@ class QTrainer():
         # 1: Get predcited Q values with current state
         pred = self.model(state)
         next_q = self.model(next_state)
-        target = pred.clone()
+        target = pred.clone().detach()
 
         with torch.no_grad():
             next_q_target = self.target_model(next_state)
