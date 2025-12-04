@@ -62,9 +62,13 @@ class Snake():
             screen.blit(square.surf, (x * cell_size, y * cell_size))
     
 
-    def Update(self, action):
+    def Update(self, action, control_type):
 
-        self.RotateDirection(action)
+        if control_type == "relative":
+            self.RotateDirection(action)
+        elif control_type == "absolute":
+            absolute_action = DIRECTIONS[np.argmax(action)]
+            self.direction = absolute_action
         self.head = self.body[0] + self.direction
         self.body.insert(0, self.head)
         
@@ -119,12 +123,13 @@ class Food():
 
 class Game():
 
-    def __init__(self):
+    def __init__(self, control_type):
         self.snake = Snake()
         self.food = Food(self.snake.body)
         self.frame_iteration = 0
         self.score = 0
         self.done = False
+        self.control_type = control_type
         
         
 
@@ -148,7 +153,7 @@ class Game():
         self.Draw()
         pygame.display.flip()
 
-        self.snake.Update(action)
+        self.snake.Update(action, self.control_type)
         self.CheckCollisionWithFood()
         self.CheckCollisionWithEdges()
         self.CheckCollisionWithTail()

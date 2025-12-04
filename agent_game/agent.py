@@ -117,7 +117,7 @@ def train():
     mean_window = 10
     record = 0
     agent = Agent()
-    game = Game()
+    game = Game(control_type="relative")
 
     while True:
 

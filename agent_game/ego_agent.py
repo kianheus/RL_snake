@@ -169,7 +169,7 @@ def train():
     mean_window = 10
     record = 0
     agent = Agent()
-    game = Game()
+    game = Game(control_type="relative")
 
     while True:
 
@@ -229,7 +229,7 @@ def manual():
     mean_window = 10
     record = 0
     agent = Agent()
-    game = Game()
+    game = Game(control_type = "absolute")
 
     LEFT = [1, 0, 0]
     STRAIGHT = [0, 1, 0]
