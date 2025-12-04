@@ -164,7 +164,6 @@ while not WindowShouldClose:
             WindowShouldClose = True
 
         if event.type == pygame.KEYDOWN:
-            print(game.snake.direction)
 
             if event.key == pygame.K_ESCAPE:
                 WindowShouldClose = True
