@@ -37,8 +37,8 @@ class Agent():
         self.model = Linear_QNet(27, 256, 3)
         self.trainer = QTrainer(self.model, lr=LR, gamma=self.gamma)
 
-    def Get_Occupance_Grid(self, game, size=5, cell_count=20):
-        local_coords = [(dx, dy) for dy in range(-2,3) for dx in range(-2,3)]
+    def Ego_Occupance_Grid(self, game, size=5, cell_count=20):
+        local_coords = [(dx, dy) for dy in range(-(size//2),size//2+1) for dx in range(-(size//2),size//2+1)]
         
         grid = np.zeros((size,size), dtype=int)
         
