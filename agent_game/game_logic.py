@@ -134,13 +134,14 @@ class Food():
 
 class Game():
 
-    def __init__(self, control_type):
+    def __init__(self, control_type, check_connected=False):
         self.snake = Snake()
         self.food = Food(self.snake.body)
         self.frame_iteration = 0
         self.score = 0
         self.done = False
         self.control_type = control_type
+        self.check_connected = check_connected
         
         
 
@@ -164,7 +165,8 @@ class Game():
         self.Draw()
         pygame.display.flip()
 
-        self.CheckConnected()
+        if self.check_connected:
+            self.CheckConnected()
         self.snake.Update(action, self.control_type)
         self.CheckCollisionWithFood()
         self.CheckCollisionWithEdges()
