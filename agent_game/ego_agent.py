@@ -5,15 +5,17 @@ import random
 import numpy as np
 from collections import deque
 import warnings
-warnings.filterwarnings("ignore", module="pygame")
 
 from game_logic import Game
+from agent_types import EgoAgent
 from model import Linear_QNet, QTrainer
 from plotter import plot
 from game_logic import cell_count
 
+device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+warnings.filterwarnings("ignore", module="pygame")
 
-MAX_MEMORY = 5000
+MAX_MEMORY = 10000
 BATCH_SIZE = 1000
 LR = 0.001
 
@@ -104,7 +106,7 @@ class Agent():
         occupance_grid = self.Get_Occupance_Grid(game, size=5, cell_count=cell_count)
 
         state = np.concatenate((occupance_grid.flatten(), np.array([food_forward, food_left])))
-        
+
 
         return state
         
@@ -143,7 +145,6 @@ class Agent():
 
         loss = self.trainer.train_step(states, actions, rewards, next_states, dones)
         return loss
-
 
     def train_short_memory(self, state, action, reward, next_state, done):
         self.trainer.train_step(state, action, reward, next_state, done)
@@ -204,13 +205,11 @@ def train():
             game.Reset()
             agent.n_games += 1
             loss = agent.train_long_memory()
-            print("Memory size:", len(agent.memory))
 
             if score > record:
                 record = score
                 agent.model.save()
             
-            print("Game", agent.n_games, "Loss:", loss.item())
 
             plot_scores.append(score)
             total_score += score
@@ -278,6 +277,7 @@ def manual():
         agent.remember(state_old, manual_action, reward, state_new, done)
 
 
+
         if done:
             # Train long memory
             game.Reset()
@@ -300,7 +300,6 @@ def manual():
 
             plot_mean_scores.append(mean_score)
             plot(plot_scores, plot_mean_scores)
-        
 
 if __name__ == "__main__":
     train()
