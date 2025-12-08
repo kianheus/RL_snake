@@ -242,13 +242,16 @@ def manual():
                         wait_for_input = False
 
                     if event.key == pygame.K_UP:
-                        manual_action = STRAIGHT
+                        manual_action = NORTH
                         wait_for_input = False
                     if event.key == pygame.K_RIGHT:
-                        manual_action = RIGHT
+                        manual_action = EAST
+                        wait_for_input = False
+                    if event.key == pygame.K_DOWN:
+                        manual_action = SOUTH
                         wait_for_input = False
                     if event.key == pygame.K_LEFT:
-                        manual_action = LEFT
+                        manual_action = WEST
                         wait_for_input = False
 
 
