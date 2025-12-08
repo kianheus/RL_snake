@@ -34,8 +34,15 @@ class Agent():
         self.memory = deque(maxlen=MAX_MEMORY)
         self.memory_hashes = deque(maxlen=MAX_MEMORY)
         self.memory_set = set()
-        self.model = Linear_QNet(27, 256, 3)
-        self.trainer = QTrainer(self.model, lr=LR, gamma=self.gamma)
+        self.occupance_size = 7
+        self.model = Linear_QNet(self.occupance_size**2 + 2, 32, 3)
+
+        self.target_model = Linear_QNet(self.occupance_size**2 + 2, 32, 3)
+        self.target_model.load_state_dict(self.model.state_dict())
+        self.target_model.eval()
+
+        self.trainer = QTrainer(self.model, self.target_model, lr=LR, gamma=self.gamma)
+        
 
     def Ego_Occupance_Grid(self, game, size=5, cell_count=20):
         local_coords = [(dx, dy) for dy in range(-(size//2),size//2+1) for dx in range(-(size//2),size//2+1)]
@@ -105,7 +112,7 @@ class Agent():
             food_forward = not food_is_east
             food_left = food_is_north
 
-        occupance_grid = self.Get_Occupance_Grid(game, size=5, cell_count=cell_count)
+        occupance_grid = self.Ego_Occupance_Grid(game, size=self.occupance_size, cell_count=cell_count)
 
         state = np.concatenate((occupance_grid.flatten(), np.array([food_forward, food_left])))
 
