@@ -32,8 +32,6 @@ class Agent():
         self.epsilon = 0
         self.gamma = 0.9 # Discount rate (<1)
         self.memory = deque(maxlen=MAX_MEMORY)
-        self.memory_hashes = deque(maxlen=MAX_MEMORY)
-        self.memory_set = set()
         self.occupance_size = 7
         self.model = Linear_QNet(self.occupance_size**2 + 2, 32, 3)
 
@@ -121,28 +119,7 @@ class Agent():
         
 
     def remember(self, state, action, reward, next_state, done):
-        # create a hashable experience signature
-        h = (
-            tuple(state),
-            tuple(action),
-            reward,
-            tuple(next_state),
-            done
-        )
-
-        # Avoid duplicates
-        if h in self.memory_set:
-            return
-
-        # If the deque is full, we must manually pop the oldest hash
-        if len(self.memory_hashes) == self.memory_hashes.maxlen:
-            old_h = self.memory_hashes.popleft()
-            self.memory_set.remove(old_h)
-
-        # Now add new transition
         self.memory.append((state, action, reward, next_state, done))
-        self.memory_hashes.append(h)
-        self.memory_set.add(h)
 
     def train_long_memory(self):
         if len(self.memory) > BATCH_SIZE:
