@@ -26,16 +26,7 @@ NN_layers = [128, 64, 64] # Size of hidden layers (fully connected with ReLU act
 occupance_size = 7
 
 
-agent = Agent.from_type("ego",
-                        NN_layers=NN_layers,
-                        occupance_size=occupance_size,
-                        LR=LR,
-                        gamma=gamma,
-                        BATCH_SIZE=BATCH_SIZE,
-                        MAX_MEMORY=MAX_MEMORY)
 
-
-game = Game(control_type=agent.net.control_type)
 
 
 def train():
@@ -45,6 +36,16 @@ def train():
     total_score = 0
     mean_window = 100
     record = 0
+    agent = Agent.from_type("ego",
+                            NN_layers=NN_layers,
+                            occupance_size=occupance_size,
+                            LR=LR,
+                            gamma=gamma,
+                            BATCH_SIZE=BATCH_SIZE,
+                            MAX_MEMORY=MAX_MEMORY)
+
+
+    game = Game(control_type=agent.net.control_type)    
 
     while True:
 
