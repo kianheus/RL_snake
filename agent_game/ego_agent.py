@@ -129,6 +129,12 @@ class Agent():
 
         states, actions, rewards, next_states, dones = zip(*mini_sample)
 
+        states      = np.array(states, dtype=np.float32)
+        actions     = np.array(actions, dtype=np.float32)
+        rewards     = np.array(rewards, dtype=np.float32)
+        next_states = np.array(next_states, dtype=np.float32)
+        dones       = np.array(dones, dtype=np.float32)
+
         loss = self.trainer.train_step(states, actions, rewards, next_states, dones)
         return loss
 
