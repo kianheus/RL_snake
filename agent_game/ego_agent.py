@@ -169,7 +169,7 @@ def train():
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
-                quit()
+                return record
 
 
         # Get old state
@@ -294,5 +294,6 @@ def manual():
             plot(plot_scores, plot_mean_scores)
 
 if __name__ == "__main__":
-    train()
+    record = train()
+    print("Done, saving record:", record)
     #manual()
