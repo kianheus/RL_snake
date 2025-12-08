@@ -177,6 +177,9 @@ def train():
         # Get move
         final_action = agent.get_action(state_old)
 
+        if agent.n_games % 25 == 0:
+            agent.target_model.load_state_dict(agent.model.state_dict())
+
 
         # Perform move and get new state
         reward, done, score = game.Step(final_action)
