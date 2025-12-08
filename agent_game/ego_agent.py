@@ -159,7 +159,7 @@ def train():
     plot_scores = []
     plot_mean_scores = []
     total_score = 0
-    mean_window = 10
+    mean_window = 100
     record = 0
     agent = Agent()
     game = Game(control_type="relative")
