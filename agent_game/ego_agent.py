@@ -54,9 +54,11 @@ class Agent():
             # snake body
             for part in game.snake.body:
                 if x == part[0] and y == part[1]:
-                    grid[i//size, i%size] = 1
+                    grid[i//size, i%size] = 2
                     break
         
+            if game.food.position[0] == x and game.food.position[1] == y:
+                grid[i//size, i%size] = -1
         # rotate
         rot_map = {
             (0,-1): 0,
