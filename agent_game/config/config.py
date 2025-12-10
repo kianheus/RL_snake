@@ -227,6 +227,7 @@ class MainWindow(QtW.QMainWindow):
         
 
     def refresh_all(self):
+        self.alphabetize_profile_options()
         self.cmb_agent_type.setCurrentText(self.config_data["agent_type"])
 
     def save_settings(self):
@@ -260,6 +261,7 @@ class MainWindow(QtW.QMainWindow):
         # Add to UI
         self.cmb_profile.insertItem(-1, name)
         #self.cmb_profile.addItem(name)
+        self.alphabetize_profile_options()
         self.cmb_profile.setCurrentText(name) # TODO: Consider whether this should be in the refresh_all() function
         #self.refresh_all()
 
@@ -279,9 +281,9 @@ class MainWindow(QtW.QMainWindow):
         profiles.append("Add new")
         return profiles
     
-    def alphabetize_profile_options(self):
+    def alphabetize_profile_options(self): 
         self.profiles.remove("Add new")
-        sorted_profiles = sorted(self.profiles)
+        self.profiles = sorted(self.profiles)
         self.profiles.append("Add new")
 
 
