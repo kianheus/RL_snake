@@ -397,6 +397,13 @@ class MainWindow(QtW.QMainWindow):
         self.lyt_nn_layers.addStretch()
         
 
+    def clear_layout(self, layout: QtW.QBoxLayout):
+        while layout.count():
+            item = layout.takeAt(0)
+            widget = item.widget()
+            if widget is not None:
+                layout.removeWidget(widget)
+
 
 config_dir = "agent_game/config"
 
