@@ -372,6 +372,11 @@ class MainWindow(QtW.QMainWindow):
         self.inp_nn_layers.append(inp_nn_layer)
         self.update_nn_inputs()
 
+    def remove_nn_layer(self):
+        removed_widget = self.inp_nn_layers.pop()
+        removed_widget.deleteLater()
+        self.update_nn_inputs()
+
 
 config_dir = "agent_game/config"
 
