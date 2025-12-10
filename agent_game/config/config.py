@@ -266,13 +266,21 @@ class MainWindow(QtW.QMainWindow):
         # Add to data model
         # TODO: Add the new profile above the "Add new" option
         self.profiles.append(name)
+
         self.active_profile = name
+        self.save_settings()
+
+        self.alphabetize_profile_options()
+
+        self.cmb_profile.blockSignals(True)
+        self.cmb_profile.clear()
+        self.cmb_profile.addItems(self.profiles)
+        self.cmb_profile.setCurrentText(name) # TODO: Consider whether this should be in the refresh_all() function
+        self.cmb_profile.blockSignals(False)
+
+        #self.refresh_all()
 
         # Add to UI
-        self.cmb_profile.insertItem(-1, name)
-        #self.cmb_profile.addItem(name)
-        self.alphabetize_profile_options()
-        self.cmb_profile.setCurrentText(name) # TODO: Consider whether this should be in the refresh_all() function
         #self.refresh_all()
 
 
