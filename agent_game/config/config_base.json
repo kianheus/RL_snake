@@ -1,0 +1,14 @@
+{
+    "agent_type_options": [
+        "Basic",
+        "Ego",
+        "Convolutional"
+    ],
+    "agent_type": "Basic",
+    "profiles": [
+        "Basic_01",
+        "Ego_01",
+    	"Add new"
+    ],
+    "active_profile": "Basic_01"
+}
