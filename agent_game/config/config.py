@@ -73,6 +73,9 @@ class MainWindow(QtW.QMainWindow):
         self.lyt_main.addStretch()
         self.lyt_main.addLayout(self.lyt_save)
 
+        ### Tab main formatting and spacing
+        self.lyt_main.setContentsMargins(20, 20, 20, 20)
+        self.lyt_main.setSpacing(0)
 
         ### Get QWidget from lyt_main
         self.tab_main = QtW.QWidget()
