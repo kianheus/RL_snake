@@ -29,7 +29,7 @@ class MainWindow(QtW.QMainWindow):
         with open(profile_filepath) as json_file:
             self.config_data = json.load(json_file)
 
-        self.profiles = self.get_profiles_from_dir()
+        self.update_profiles_from_dir()
         
 
         """     General window settings     """
@@ -227,6 +227,7 @@ class MainWindow(QtW.QMainWindow):
         
 
     def refresh_all(self):
+        self.update_profiles_from_dir()
         self.alphabetize_profile_options()
         self.cmb_agent_type.setCurrentText(self.config_data["agent_type"])
 
@@ -265,21 +266,22 @@ class MainWindow(QtW.QMainWindow):
         self.cmb_profile.setCurrentText(name) # TODO: Consider whether this should be in the refresh_all() function
         #self.refresh_all()
 
+
         # Clear input box
         self.inp_new_profile.clear()
 
-    def get_profiles_from_dir(self):
+    def update_profiles_from_dir(self):
         prefix = "config_"
         suffix = ".json"
 
-        profiles = [
+        self.profiles = [
             f.removeprefix(prefix).removesuffix(suffix) for f in os.listdir(self.config_dir)
             if f.startswith(prefix) and f.endswith(suffix)
         ]
 
-        profiles.remove("recovery")
-        profiles.append("Add new")
-        return profiles
+        self.profiles.remove("recovery")
+        self.profiles.append("Add new")
+        
     
     def alphabetize_profile_options(self): 
         self.profiles.remove("Add new")
