@@ -52,8 +52,8 @@ class MainWindow(QtW.QMainWindow):
 
         # Combobox
         self.cmb_profile = QtW.QComboBox()
-        self.cmb_profile.addItems(self.config_data["profiles"])
-        self.cmb_profile.setCurrentText(self.config_data["active_profile"])
+        self.cmb_profile.addItems(self.profiles)
+        self.cmb_profile.setCurrentText(self.active_profile)
         self.cmb_profile.currentTextChanged.connect(self.profile_type_changed)
 
         # Add items to profile selection layout
@@ -96,7 +96,7 @@ class MainWindow(QtW.QMainWindow):
 
         # Combobox
         self.cmb_agent_type = QtW.QComboBox(tabs)
-        self.cmb_agent_type.addItems(["Basic", "Ego", "Convolutional"])
+        self.cmb_agent_type.addItems(self.agent_types)
         self.cmb_agent_type.setCurrentText(self.config_data["agent_type"])
         self.cmb_agent_type.currentTextChanged.connect(self.agent_type_changed)
 
@@ -166,7 +166,11 @@ class MainWindow(QtW.QMainWindow):
         if type_string == "Add new":
             self.show_add_profile()
         else:
-            self.config_data["active_profile"] = type_string
+            self.active_profile = type_string
+            profile_filepath = create_config_filepath(self.config_dir, self.active_profile)
+            with open(profile_filepath) as json_file:
+                self.config_data = json.load(json_file)      
+            self.refresh_all()      
             self.hide_add_profile()
 
     def show_add_profile(self):
@@ -181,7 +185,6 @@ class MainWindow(QtW.QMainWindow):
 
     def agent_type_changed(self, type_string):
         self.config_data["agent_type"] = type_string
-        print(self.config_data["agent_type"])
 
     def reset_settings(self):
         with open("agent_game/config/config_recovery.json") as json_file:
@@ -195,7 +198,13 @@ class MainWindow(QtW.QMainWindow):
         self.cmb_profile.setCurrentText(self.config_data["active_profile"])
 
     def save_settings(self):
-        with open("agent_game/config/config_base.json", "w") as json_file:
+        file_string = "agent_game/config/config_" + self.active_profile + ".json"
+        if not os.path.exists(file_string):
+            print("Profile does not exist, creating new profile:", self.active_profile)
+        else:
+            print("Saving onto existing profile:", self.active_profile)
+
+        with open(file_string, "w") as json_file:
             json.dump(self.config_data, json_file, indent=4)
 
     def create_profile(self):
@@ -206,19 +215,21 @@ class MainWindow(QtW.QMainWindow):
             return
         
         # Avoid adding duplicate profiles
-        if name in self.config_data["profiles"]:
+        if name in self.profiles:
             QtW.QMessageBox.warning(self, "Profile exists",
                                     f"A profile named '{name}' already exists.")
             return
         
         # Add to data model
         # TODO: Add the new profile above the "Add new" option
-        self.config_data["profiles"].append(name)
-        self.config_data["active_profile"] = name
+        self.profiles.append(name)
+        self.active_profile = name
 
         # Add to UI
-        self.cmb_profile.addItem(name)
+        self.cmb_profile.insertItem(-1, name)
+        #self.cmb_profile.addItem(name)
         self.cmb_profile.setCurrentText(name) # TODO: Consider whether this should be in the refresh_all() function
+        #self.refresh_all()
 
         # Clear input box
         self.inp_new_profile.clear()
@@ -250,6 +261,5 @@ app = QtW.QApplication([])
 
 window = MainWindow(config_dir=config_dir)
 window.show()
-
 
 app.exec()
