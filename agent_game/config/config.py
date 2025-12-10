@@ -4,10 +4,22 @@ import json
 
 
 class MainWindow(QtW.QMainWindow):
-    def __init__(self, config_data):
+    def __init__(self, config_dir):
         super().__init__()
 
-        self.config_data = config_data
+        self.config_dir = config_dir
+        cookies_filepath = config_dir + "/cookies.json"
+
+        with open(cookies_filepath) as json_file:
+                    cookies = json.load(json_file)
+
+        self.active_profile = cookies["last_active"]
+        self.agent_types = cookies["agent_type_options"]
+
+        profile_filepath = create_config_filepath(config_dir, self.active_profile)
+
+        with open(profile_filepath) as json_file:
+            self.config_data = json.load(json_file)
 
         """     General window settings     """
 
@@ -214,7 +226,7 @@ with open("agent_game/config/config_base.json") as json_file:
 
 app = QtW.QApplication([])
 
-window = MainWindow(config_data)
+window = MainWindow(config_dir=config_dir)
 window.show()
 
 
