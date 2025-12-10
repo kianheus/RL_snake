@@ -47,6 +47,31 @@ class MainWindow(QtW.QMainWindow):
         self.lyt_profile_select.addWidget(self.cmb_profile)
 
 
+        ### Profile creation row
+
+        # Input row
+        self.inp_new_profile = QtW.QLineEdit()
+        self.inp_new_profile.setPlaceholderText("New profile name")
+        self.profile_row_height = self.inp_new_profile.sizeHint().height()
+
+        # Button
+        self.btn_create_profile = QtW.QPushButton("Create")
+        self.btn_create_profile.setFixedWidth(90)
+        self.btn_create_profile.clicked.connect(self.create_profile)  
+
+        # Add items to profile creation layout
+        self.lyt_profile_create = QtW.QHBoxLayout()
+        self.lyt_profile_create.addWidget(self.inp_new_profile)
+        self.lyt_profile_create.addWidget(self.btn_create_profile)
+
+        # Combine profile layouts
+        self.lyt_profile = QtW.QVBoxLayout()
+        self.lyt_profile.addLayout(self.lyt_profile_select)
+        self.lyt_profile.addLayout(self.lyt_profile_create)
+
+
+
+
         ### Agent selection row
 
         # Text description
@@ -85,7 +110,7 @@ class MainWindow(QtW.QMainWindow):
 
 
         ### Add all items to main tab
-        self.lyt_main.addLayout(self.lyt_profile_select)
+        self.lyt_main.addLayout(self.lyt_profile)
         self.lyt_main.addLayout(self.lyt_agent)
         self.lyt_main.addStretch()
         self.lyt_main.addLayout(self.lyt_save)
@@ -129,6 +154,31 @@ class MainWindow(QtW.QMainWindow):
     def save_settings(self):
         with open("agent_game/config/config_base.json", "w") as json_file:
             json.dump(self.config_data, json_file, indent=4)
+
+    def create_profile(self):
+        name = self.inp_new_profile.text().strip()
+        
+        # Check if any new profile name was entered
+        if not name:
+            return
+        
+        # Avoid adding duplicate profiles
+        if name in self.config_data["profiles"]:
+            QtW.QMessageBox.warning(self, "Profile exists",
+                                    f"A profile named '{name}' already exists.")
+            return
+        
+        # Add to data model
+        # TODO: Add the new profile above the "Add new" option
+        self.config_data["profiles"].append(name)
+        self.config_data["active_profile"] = name
+
+        # Add to UI
+        self.cmb_profile.addItem(name)
+        self.cmb_profile.setCurrentText(name) # TODO: Consider whether this should be in the refresh_all() function
+
+        # Clear input box
+        self.inp_new_profile.clear()
 
 with open("agent_game/config/config_base.json") as json_file:
     config_data = json.load(json_file)
