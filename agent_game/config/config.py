@@ -52,6 +52,8 @@ class MainWindow(QtW.QMainWindow):
         # Input row
         self.inp_new_profile = QtW.QLineEdit()
         self.inp_new_profile.setPlaceholderText("New profile name")
+
+        # Record row height for future formatting
         self.profile_row_height = self.inp_new_profile.sizeHint().height()
 
         # Button
@@ -110,7 +112,14 @@ class MainWindow(QtW.QMainWindow):
 
 
         ### Add all items to main tab
+
+
+        line_height = self.fontMetrics().height()
+
         self.lyt_main.addLayout(self.lyt_profile)
+        self.spacer1 = QtW.QWidget()
+        self.spacer1.setFixedHeight(self.profile_row_height)
+        self.lyt_main.addWidget(self.spacer1)
         self.lyt_main.addLayout(self.lyt_agent)
         self.lyt_main.addStretch()
         self.lyt_main.addLayout(self.lyt_save)
@@ -132,11 +141,28 @@ class MainWindow(QtW.QMainWindow):
         tabs.addTab(self.tab_main, "Main")
         tabs.addTab(placeholder2, "Advanced")
 
+
+        ### Call any methods required at startup
+        self.hide_add_profile()
+
         self.setCentralWidget(tabs)
 
     def profile_type_changed(self, type_string):
-        self.config_data["active_profile"] = type_string
-        
+        if type_string == "Add new":
+            self.show_add_profile()
+        else:
+            self.config_data["active_profile"] = type_string
+            self.hide_add_profile()
+
+    def show_add_profile(self):
+        self.inp_new_profile.show()
+        self.btn_create_profile.show()
+        self.spacer1.hide()
+
+    def hide_add_profile(self):
+        self.inp_new_profile.hide()
+        self.btn_create_profile.hide()
+        self.spacer1.show()        
 
     def agent_type_changed(self, type_string):
         self.config_data["agent_type"] = type_string
@@ -149,6 +175,8 @@ class MainWindow(QtW.QMainWindow):
 
     def refresh_all(self):
         self.cmb_agent_type.setCurrentText(self.config_data["agent_type"])
+        self.cmb_profile.clear()
+        self.cmb_profile.addItems(self.config_data["profiles"])
         self.cmb_profile.setCurrentText(self.config_data["active_profile"])
 
     def save_settings(self):
