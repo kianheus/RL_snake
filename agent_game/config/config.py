@@ -120,6 +120,53 @@ class MainWindow(QtW.QMainWindow):
         self.lyt_agent.addWidget(self.cmb_agent_type)
 
 
+        ### NN layers selection box
+
+        # Text description
+        self.lbl_nn_layers = QtW.QLabel("NN hidden layers:")
+
+        # New layer button
+        self.btn_add_nn_layer = QtW.QPushButton("Add layer")
+        self.btn_add_nn_layer.setFixedWidth(100)
+        self.btn_add_nn_layer.clicked.connect(self.create_nn_layer)  
+
+        # Small spacer
+        self.nn_w_spacer = QtW.QWidget()
+        self.nn_w_spacer.setFixedWidth(10)
+
+        # Remove layer button
+        self.btn_remove_nn_layer = QtW.QPushButton("Remove layer")
+        self.btn_remove_nn_layer.setFixedWidth(100)
+        self.btn_remove_nn_layer.clicked.connect(self.remove_nn_layer)  
+        self.btn_remove_nn_layer.setEnabled(False)
+
+
+        self.lyt_nn_description = QtW.QHBoxLayout()
+        self.lyt_nn_description.addWidget(self.lbl_nn_layers)
+        self.lyt_nn_description.addWidget(self.btn_add_nn_layer)
+        self.lyt_nn_description.addWidget(self.nn_w_spacer)
+        self.lyt_nn_description.addWidget(self.btn_remove_nn_layer)
+
+
+        # List of nn layers
+        self.inp_nn_layers = []
+
+        # Create small whitespace
+        self.nn_h_spacer = QtW.QWidget()
+        self.nn_h_spacer.setFixedHeight(10)
+
+
+        # Prepare nn layers QHBox
+        self.lyt_nn_layers = QtW.QHBoxLayout()
+        self.create_nn_layer()
+
+        # Add items to NN layers layout
+        self.lyt_nn_box = QtW.QVBoxLayout()
+        self.lyt_nn_box.addLayout(self.lyt_nn_description)
+        self.lyt_nn_box.addWidget(self.nn_h_spacer)
+        self.lyt_nn_box.addLayout(self.lyt_nn_layers)
+
+
         ### Save/delete/recover buttons row
 
         # Define recover button
@@ -157,6 +204,10 @@ class MainWindow(QtW.QMainWindow):
         self.spacer1.setFixedHeight(self.profile_row_height)
         self.lyt_main.addWidget(self.spacer1)
         self.lyt_main.addLayout(self.lyt_agent)
+        self.spacer2 = QtW.QWidget()
+        self.spacer2.setFixedHeight(self.profile_row_height)
+        self.lyt_main.addWidget(self.spacer2)
+        self.lyt_main.addLayout(self.lyt_nn_box)
         self.lyt_main.addStretch()
         self.lyt_main.addLayout(self.lyt_save)
 
