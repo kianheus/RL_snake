@@ -48,11 +48,24 @@ class MainWindow(QtW.QMainWindow):
         self.lyt_agent.addWidget(self.cmb_agent_type)
 
 
+        ### Save button row
+
+        # Define button
+        self.btn_save = QtW.QPushButton("Save")
+        self.btn_save.setFixedWidth(80)
+        self.btn_save.clicked.connect(self.save_settings)
+
+        # Add item to layout
+        self.lyt_save = QtW.QHBoxLayout()
+        self.lyt_save.addStretch()
+        self.lyt_save.addWidget(self.btn_save)
+
 
 
         ### Add all items to main tab
         self.lyt_main.addLayout(self.lyt_agent)
         self.lyt_main.addStretch()
+        self.lyt_main.addLayout(self.lyt_save)
 
 
         ### Get QWidget from lyt_main
@@ -75,6 +88,10 @@ class MainWindow(QtW.QMainWindow):
         self.config_data["agent_type"] = type_string
         print(self.config_data["agent_type"])
 
+
+    def save_settings(self):
+        with open("agent_game/config/config_base.json", "w") as json_file:
+            json.dump(self.config_data, json_file, indent=4)
 
 with open("agent_game/config/config_base.json") as json_file:
     config_data = json.load(json_file)
