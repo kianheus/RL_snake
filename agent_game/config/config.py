@@ -30,6 +30,22 @@ class MainWindow(QtW.QMainWindow):
         """     Tab Main     """
         self.lyt_main = QtW.QVBoxLayout()
 
+        ### Profile selection row
+
+        # Text description
+        self.lbl_profile = QtW.QLabel("Profile:")
+
+        # Combobox
+        self.cmb_profile = QtW.QComboBox()
+        self.cmb_profile.addItems(self.config_data["profiles"])
+        self.cmb_profile.setCurrentText(self.config_data["active_profile"])
+        self.cmb_profile.currentTextChanged.connect(self.profile_type_changed)
+
+        # Add items to profile selection layout
+        self.lyt_profile_select = QtW.QHBoxLayout()
+        self.lyt_profile_select.addWidget(self.lbl_profile)
+        self.lyt_profile_select.addWidget(self.cmb_profile)
+
 
         ### Agent selection row
 
@@ -69,6 +85,7 @@ class MainWindow(QtW.QMainWindow):
 
 
         ### Add all items to main tab
+        self.lyt_main.addLayout(self.lyt_profile_select)
         self.lyt_main.addLayout(self.lyt_agent)
         self.lyt_main.addStretch()
         self.lyt_main.addLayout(self.lyt_save)
@@ -92,6 +109,9 @@ class MainWindow(QtW.QMainWindow):
 
         self.setCentralWidget(tabs)
 
+    def profile_type_changed(self, type_string):
+        self.config_data["active_profile"] = type_string
+        
 
     def agent_type_changed(self, type_string):
         self.config_data["agent_type"] = type_string
@@ -104,6 +124,7 @@ class MainWindow(QtW.QMainWindow):
 
     def refresh_all(self):
         self.cmb_agent_type.setCurrentText(self.config_data["agent_type"])
+        self.cmb_profile.setCurrentText(self.config_data["active_profile"])
 
     def save_settings(self):
         with open("agent_game/config/config_base.json", "w") as json_file:
