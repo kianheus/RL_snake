@@ -229,7 +229,16 @@ class MainWindow(QtW.QMainWindow):
     def refresh_all(self):
         self.update_profiles_from_dir()
         self.alphabetize_profile_options()
+
+        self.cmb_agent_type.blockSignals(True)
         self.cmb_agent_type.setCurrentText(self.config_data["agent_type"])
+        self.cmb_agent_type.blockSignals(False)
+
+        self.cmb_profile.blockSignals(True)
+        self.cmb_profile.clear()
+        self.cmb_profile.addItems(self.profiles)
+        self.cmb_profile.setCurrentText(self.active_profile)
+        self.cmb_profile.blockSignals(False)
 
     def save_settings(self):
         file_string = "agent_game/config/config_" + self.active_profile + ".json"
