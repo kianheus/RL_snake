@@ -48,15 +48,21 @@ class MainWindow(QtW.QMainWindow):
         self.lyt_agent.addWidget(self.cmb_agent_type)
 
 
-        ### Save button row
+        ### Save/recover buttons row
 
-        # Define button
+        # Define recover button
+        self.btn_recover = QtW.QPushButton("Reset profile")
+        self.btn_recover.setFixedWidth(130)
+        self.btn_recover.clicked.connect(self.reset_settings)
+
+        # Define save button
         self.btn_save = QtW.QPushButton("Save")
         self.btn_save.setFixedWidth(80)
         self.btn_save.clicked.connect(self.save_settings)
 
-        # Add item to layout
+        # Add items to save/recover layout
         self.lyt_save = QtW.QHBoxLayout()
+        self.lyt_save.addWidget(self.btn_recover)
         self.lyt_save.addStretch()
         self.lyt_save.addWidget(self.btn_save)
 
@@ -88,6 +94,13 @@ class MainWindow(QtW.QMainWindow):
         self.config_data["agent_type"] = type_string
         print(self.config_data["agent_type"])
 
+    def reset_settings(self):
+        with open("agent_game/config/config_recovery.json") as json_file:
+            self.config_data = json.load(json_file)
+            self.refresh_all()
+
+    def refresh_all(self):
+        self.cmb_agent_type.setCurrentText(self.config_data["agent_type"])
 
     def save_settings(self):
         with open("agent_game/config/config_base.json", "w") as json_file:
