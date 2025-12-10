@@ -4,8 +4,10 @@ import json
 
 
 class MainWindow(QtW.QMainWindow):
-    def __init__(self):
+    def __init__(self, config_data):
         super().__init__()
+
+        self.config_data = config_data
 
         """     General window settings     """
 
@@ -26,7 +28,36 @@ class MainWindow(QtW.QMainWindow):
 
 
         """     Tab Main     """
-        placeholder1 = QtW.QWidget()
+        self.lyt_main = QtW.QVBoxLayout()
+
+
+        ### Agent selection row
+
+        # Text description
+        self.lbl_agent = QtW.QLabel("Agent type:")
+
+        # Combobox
+        self.cmb_agent_type = QtW.QComboBox(tabs)
+        self.cmb_agent_type.addItems(["Basic", "Ego", "Convolutional"])
+        self.cmb_agent_type.setCurrentText(self.config_data["agent_type"])
+        self.cmb_agent_type.currentTextChanged.connect(self.agent_type_changed)
+
+        # Add items to agent layout
+        self.lyt_agent = QtW.QHBoxLayout()
+        self.lyt_agent.addWidget(self.lbl_agent)
+        self.lyt_agent.addWidget(self.cmb_agent_type)
+
+
+
+
+        ### Add all items to main tab
+        self.lyt_main.addLayout(self.lyt_agent)
+        self.lyt_main.addStretch()
+
+
+        ### Get QWidget from lyt_main
+        self.tab_main = QtW.QWidget()
+        self.tab_main.setLayout(self.lyt_main)
 
 
         """     Tab Advanced     """
@@ -34,15 +65,24 @@ class MainWindow(QtW.QMainWindow):
 
 
 
-        tabs.addTab(placeholder1, "Main")
+        tabs.addTab(self.tab_main, "Main")
         tabs.addTab(placeholder2, "Advanced")
 
         self.setCentralWidget(tabs)
 
 
+    def agent_type_changed(self, type_string):
+        self.config_data["agent_type"] = type_string
+        print(self.config_data["agent_type"])
+
+
+with open("agent_game/config/config_base.json") as json_file:
+    config_data = json.load(json_file)
+
+
 app = QtW.QApplication([])
 
-window = MainWindow()
+window = MainWindow(config_data)
 window.show()
 
 
