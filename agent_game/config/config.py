@@ -2,6 +2,13 @@ import PyQt6.QtWidgets as QtW
 import PyQt6.QtCore as QtC
 import json
 
+import os
+
+
+def create_config_filepath(config_dir, file_name: str) -> str:
+    filepath = config_dir + "/config_" + file_name + ".json"
+    return filepath
+    
 
 class MainWindow(QtW.QMainWindow):
     def __init__(self, config_dir):
