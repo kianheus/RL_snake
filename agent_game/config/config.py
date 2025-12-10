@@ -120,12 +120,17 @@ class MainWindow(QtW.QMainWindow):
         self.lyt_agent.addWidget(self.cmb_agent_type)
 
 
-        ### Save/recover buttons row
+        ### Save/delete/recover buttons row
 
         # Define recover button
         self.btn_recover = QtW.QPushButton("Reset profile")
         self.btn_recover.setFixedWidth(130)
         self.btn_recover.clicked.connect(self.reset_profile)
+
+        # Define delete button
+        self.btn_delete_profile = QtW.QPushButton("Delete profile")
+        self.btn_delete_profile.setFixedWidth(130)
+        self.btn_delete_profile.clicked.connect(self.delete_profile)
 
         # Define save button
         self.btn_save = QtW.QPushButton("Save")
@@ -135,6 +140,8 @@ class MainWindow(QtW.QMainWindow):
         # Add items to save/recover layout
         self.lyt_save = QtW.QHBoxLayout()
         self.lyt_save.addWidget(self.btn_recover)
+        self.lyt_save.addStretch()
+        self.lyt_save.addWidget(self.btn_delete_profile)
         self.lyt_save.addStretch()
         self.lyt_save.addWidget(self.btn_save)
 
@@ -204,6 +211,20 @@ class MainWindow(QtW.QMainWindow):
         with open("agent_game/config/config_recovery.json") as json_file:
             self.config_data = json.load(json_file)
             self.refresh_all()
+
+    def delete_profile(self):
+        if self.active_profile == "basic_01" or self.active_profile == "ego_01":
+            QtW.QMessageBox.warning(self, "Invalid remove", "Cannot remove core profiles.")
+            return
+        
+
+        self.profiles.remove(self.active_profile)
+        file_path = create_config_filepath(self.config_dir, self.active_profile)
+        os.remove(file_path)
+        self.active_profile = self.profiles[0]
+        self.refresh_all()
+
+        
 
     def refresh_all(self):
         self.cmb_agent_type.setCurrentText(self.config_data["agent_type"])
