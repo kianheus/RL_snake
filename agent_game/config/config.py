@@ -1,5 +1,6 @@
 import PyQt6.QtWidgets as QtW
 import PyQt6.QtCore as QtC
+import PyQt6.QtGui as QtG
 import json
 
 import os
@@ -74,6 +75,12 @@ class MainWindow(QtW.QMainWindow):
         # Input row
         self.inp_new_profile = QtW.QLineEdit()
         self.inp_new_profile.setPlaceholderText("New profile name")
+
+        # Ensure that only valid expressions can be profile names
+        validator = QtG.QRegularExpressionValidator(
+            QtC.QRegularExpression("[A-Za-z0-9_-]+")
+        )
+        self.inp_new_profile.setValidator(validator)
 
         # Record row height for future formatting
         self.profile_row_height = self.inp_new_profile.sizeHint().height()
