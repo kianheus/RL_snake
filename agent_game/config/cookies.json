@@ -1,0 +1,8 @@
+{
+    "agent_type_options": [
+        "Basic",
+        "Ego",
+        "Convolutional"
+    ],
+    "last_active": "basic_01"
+}
