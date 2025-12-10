@@ -178,6 +178,7 @@ class MainWindow(QtW.QMainWindow):
         self.btn_delete_profile = QtW.QPushButton("Delete profile")
         self.btn_delete_profile.setFixedWidth(130)
         self.btn_delete_profile.clicked.connect(self.delete_profile)
+        self.awaiting_delete_confirmation = False
 
         # Define save button
         self.btn_save = QtW.QPushButton("Save")
@@ -272,14 +273,17 @@ class MainWindow(QtW.QMainWindow):
             self.show_warning_message(title="Invalid remove", message="Cannot remove core profiles.")
             return
         
-
-        self.profiles.remove(self.active_profile)
-        file_path = create_config_filepath(self.config_dir, self.active_profile)
-        os.remove(file_path)
-        self.active_profile = self.profiles[0]
-        self.refresh_all()
-
-        
+        if self.awaiting_delete_confirmation:
+            self.btn_delete_profile.setText("Delete profile")
+            self.awaiting_delete_confirmation = False
+            self.profiles.remove(self.active_profile)
+            file_path = create_config_filepath(self.config_dir, self.active_profile)
+            os.remove(file_path)
+            self.active_profile = self.profiles[0]
+            self.refresh_all()  
+        else:
+            self.btn_delete_profile.setText("Confirm delete")
+            self.awaiting_delete_confirmation = True
 
     def refresh_all(self):
         self.update_profiles_from_dir()
