@@ -182,7 +182,7 @@ class MainWindow(QtW.QMainWindow):
 
         # Define save button
         self.btn_save = QtW.QPushButton("Save")
-        self.btn_save.setFixedWidth(80)
+        self.btn_save.setFixedWidth(130)
         self.btn_save.clicked.connect(self.save_settings)
 
         # Add items to save/recover layout
@@ -299,6 +299,8 @@ class MainWindow(QtW.QMainWindow):
         self.cmb_profile.addItems(self.profiles)
         self.cmb_profile.setCurrentText(self.active_profile)
         self.cmb_profile.blockSignals(False)
+
+        
 
     def save_settings(self):
 
