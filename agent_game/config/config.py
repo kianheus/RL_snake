@@ -377,6 +377,26 @@ class MainWindow(QtW.QMainWindow):
         removed_widget.deleteLater()
         self.update_nn_inputs()
 
+    def update_nn_inputs(self):
+
+        n_layers = len(self.inp_nn_layers)
+        if n_layers >= 5:
+            self.btn_add_nn_layer.setEnabled(False)
+        else:
+            self.btn_add_nn_layer.setEnabled(True)
+        if n_layers <= 1:
+            self.btn_remove_nn_layer.setEnabled(False)
+        else:
+            self.btn_remove_nn_layer.setEnabled(True)
+
+        self.clear_layout(self.lyt_nn_layers)
+
+        for inp_nn_layer in self.inp_nn_layers:
+            self.lyt_nn_layers.addWidget(inp_nn_layer)
+            self.lyt_nn_layers.addSpacing(10)
+        self.lyt_nn_layers.addStretch()
+        
+
 
 config_dir = "agent_game/config"
 
