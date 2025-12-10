@@ -21,6 +21,9 @@ class MainWindow(QtW.QMainWindow):
         with open(profile_filepath) as json_file:
             self.config_data = json.load(json_file)
 
+        self.profiles = self.get_profiles_from_dir()
+        
+
         """     General window settings     """
 
         window_x = 150
@@ -220,8 +223,27 @@ class MainWindow(QtW.QMainWindow):
         # Clear input box
         self.inp_new_profile.clear()
 
-with open("agent_game/config/config_base.json") as json_file:
-    config_data = json.load(json_file)
+    def get_profiles_from_dir(self):
+        prefix = "config_"
+        suffix = ".json"
+
+        profiles = [
+            f.removeprefix(prefix).removesuffix(suffix) for f in os.listdir(self.config_dir)
+            if f.startswith(prefix) and f.endswith(suffix)
+        ]
+
+        profiles.remove("recovery")
+        profiles.append("Add new")
+        return profiles
+    
+    def alphabetize_profile_options(self):
+        self.profiles.remove("Add new")
+        sorted_profiles = sorted(self.profiles)
+        self.profiles.append("Add new")
+
+
+
+config_dir = "agent_game/config"
 
 
 app = QtW.QApplication([])
