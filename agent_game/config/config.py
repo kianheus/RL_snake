@@ -309,8 +309,7 @@ class MainWindow(QtW.QMainWindow):
         
         # Avoid adding duplicate profiles
         if name in self.profiles:
-            QtW.QMessageBox.warning(self, "Profile exists",
-                                    f"A profile named '{name}' already exists.")
+            self.show_warning_message(title="Profile exists", message=f"A profile named '{name}' already exists.")
             return
         
         # Add to data model
@@ -349,7 +348,6 @@ class MainWindow(QtW.QMainWindow):
         self.profiles.remove("recovery")
         self.profiles.append("Add new")
         
-    
     def alphabetize_profile_options(self): 
         self.profiles.remove("Add new")
         self.profiles = sorted(self.profiles)
@@ -402,6 +400,9 @@ class MainWindow(QtW.QMainWindow):
             widget = item.widget()
             if widget is not None:
                 layout.removeWidget(widget)
+
+    def show_warning_message(self, title, message):
+        QtW.QMessageBox.warning(self, title, message)
 
     def create_file(self):
         # Generate file string to save config data to
