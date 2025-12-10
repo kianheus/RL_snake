@@ -261,7 +261,10 @@ class MainWindow(QtW.QMainWindow):
     def reset_profile(self):
         with open("agent_game/config/config_recovery.json") as json_file:
             self.config_data = json.load(json_file)
-            self.refresh_all()
+
+        self.inp_nn_layers = []
+        self.create_nn_layer()
+        self.refresh_all()
 
     def delete_profile(self):
         if self.active_profile == "basic_01" or self.active_profile == "ego_01":
