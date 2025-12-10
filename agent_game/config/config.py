@@ -298,8 +298,7 @@ class MainWindow(QtW.QMainWindow):
         else:
             print("Saving onto existing profile:", self.active_profile)
 
-        with open(file_string, "w") as json_file:
-            json.dump(self.config_data, json_file, indent=4)
+        self.create_file()
 
     def create_profile(self):
         name = self.inp_new_profile.text().strip()
@@ -319,7 +318,7 @@ class MainWindow(QtW.QMainWindow):
         self.profiles.append(name)
 
         self.active_profile = name
-        self.save_settings()
+        self.create_file()
 
         self.alphabetize_profile_options()
 
@@ -404,6 +403,13 @@ class MainWindow(QtW.QMainWindow):
             if widget is not None:
                 layout.removeWidget(widget)
 
+    def create_file(self):
+        # Generate file string to save config data to
+        file_string = "agent_game/config/config_" + self.active_profile + ".json"
+
+        # Save config data
+        with open(file_string, "w") as json_file:
+            json.dump(self.config_data, json_file, indent=4)
 
 config_dir = "agent_game/config"
 
