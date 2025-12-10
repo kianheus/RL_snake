@@ -267,8 +267,9 @@ class MainWindow(QtW.QMainWindow):
         self.refresh_all()
 
     def delete_profile(self):
+
         if self.active_profile == "basic_01" or self.active_profile == "ego_01":
-            QtW.QMessageBox.warning(self, "Invalid remove", "Cannot remove core profiles.")
+            self.show_warning_message(title="Invalid remove", message="Cannot remove core profiles.")
             return
         
 
