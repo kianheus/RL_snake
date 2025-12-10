@@ -301,11 +301,20 @@ class MainWindow(QtW.QMainWindow):
         self.cmb_profile.blockSignals(False)
 
     def save_settings(self):
-        file_string = "agent_game/config/config_" + self.active_profile + ".json"
-        if not os.path.exists(file_string):
-            print("Profile does not exist, creating new profile:", self.active_profile)
-        else:
-            print("Saving onto existing profile:", self.active_profile)
+
+        # Check if all nn layer inputs are valid
+        for i, inp_nn_layer in enumerate(self.inp_nn_layers):
+            if not inp_nn_layer.text():
+                if len(self.inp_nn_layers) == 1:
+                    self.show_warning_message(title="Invalid nn layer", message="Network needs at least one layer, save cancelled")    
+                else:
+                    self.show_warning_message(title="Invalid nn layer", message="Empty nn layer, save cancelled")
+                return
+            value = int(inp_nn_layer.text())
+            if value > 1024:
+                self.show_warning_message(title="Invalid nn layer", message="nn layer " + str(i+1) + " too large, save cancelled")
+                return
+            self.config_data["nn_layers"][i] = value
 
         self.create_file()
 
