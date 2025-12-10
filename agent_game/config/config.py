@@ -288,6 +288,7 @@ class MainWindow(QtW.QMainWindow):
     def refresh_all(self):
         self.update_profiles_from_dir()
         self.alphabetize_profile_options()
+        self.update_nn_inputs()
 
         self.cmb_agent_type.blockSignals(True)
         self.cmb_agent_type.setCurrentText(self.config_data["agent_type"])
