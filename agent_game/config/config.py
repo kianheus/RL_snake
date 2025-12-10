@@ -356,6 +356,21 @@ class MainWindow(QtW.QMainWindow):
         self.profiles = sorted(self.profiles)
         self.profiles.append("Add new")
 
+    def create_nn_layer(self):
+        n_layers = len(self.inp_nn_layers)
+
+        inp_nn_layer = QtW.QLineEdit()
+        inp_nn_layer.setPlaceholderText("Layer " + str(n_layers+1))
+        inp_nn_layer.setFixedWidth(60)
+
+        # Ensure that only valid expressions can be profile names
+        nn_validator = QtG.QRegularExpressionValidator(
+            QtC.QRegularExpression("[0-9]+")
+        )
+        inp_nn_layer.setValidator(nn_validator)  
+
+        self.inp_nn_layers.append(inp_nn_layer)
+        self.update_nn_inputs()
 
 
 config_dir = "agent_game/config"
