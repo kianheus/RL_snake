@@ -111,7 +111,7 @@ class MainWindow(QtW.QMainWindow):
         # Define recover button
         self.btn_recover = QtW.QPushButton("Reset profile")
         self.btn_recover.setFixedWidth(130)
-        self.btn_recover.clicked.connect(self.reset_settings)
+        self.btn_recover.clicked.connect(self.reset_profile)
 
         # Define save button
         self.btn_save = QtW.QPushButton("Save")
@@ -186,16 +186,13 @@ class MainWindow(QtW.QMainWindow):
     def agent_type_changed(self, type_string):
         self.config_data["agent_type"] = type_string
 
-    def reset_settings(self):
+    def reset_profile(self):
         with open("agent_game/config/config_recovery.json") as json_file:
             self.config_data = json.load(json_file)
             self.refresh_all()
 
     def refresh_all(self):
         self.cmb_agent_type.setCurrentText(self.config_data["agent_type"])
-        self.cmb_profile.clear()
-        self.cmb_profile.addItems(self.config_data["profiles"])
-        self.cmb_profile.setCurrentText(self.config_data["active_profile"])
 
     def save_settings(self):
         file_string = "agent_game/config/config_" + self.active_profile + ".json"
