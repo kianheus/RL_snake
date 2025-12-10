@@ -343,6 +343,7 @@ class MainWindow(QtW.QMainWindow):
         self.cmb_profile.clear()
         self.cmb_profile.addItems(self.profiles)
         self.cmb_profile.setCurrentText(name) # TODO: Consider whether this should be in the refresh_all() function
+        self.hide_add_profile()
         self.cmb_profile.blockSignals(False)
 
         #self.refresh_all()
