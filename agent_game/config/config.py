@@ -6,8 +6,8 @@ import json
 import os
 
 
-def create_config_filepath(config_dir, file_name: str) -> str:
-    filepath = config_dir + "/config_" + file_name + ".json"
+def create_config_filepath(config_dir, profile_name: str) -> str:
+    filepath = config_dir + "/config_" + profile_name + ".json"
     return filepath
     
 
