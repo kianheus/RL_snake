@@ -250,11 +250,13 @@ class MainWindow(QtW.QMainWindow):
         self.inp_new_profile.show()
         self.btn_create_profile.show()
         self.spacer1.hide()
+        self.disable_below_profile()
 
     def hide_add_profile(self):
         self.inp_new_profile.hide()
         self.btn_create_profile.hide()
-        self.spacer1.show()        
+        self.spacer1.show()
+        self.enable_below_profile()    
 
     def agent_type_changed(self, type_string):
         self.config_data["agent_type"] = type_string
@@ -303,6 +305,7 @@ class MainWindow(QtW.QMainWindow):
         
 
     def save_settings(self):
+
 
         # Check if all nn layer inputs are valid
         for i, inp_nn_layer in enumerate(self.inp_nn_layers):
@@ -432,6 +435,26 @@ class MainWindow(QtW.QMainWindow):
         # Save config data
         with open(file_string, "w") as json_file:
             json.dump(self.config_data, json_file, indent=4)
+
+    def disable_below_profile(self):
+        self.cmb_agent_type.setEnabled(False)
+        self.btn_add_nn_layer.setEnabled(False)
+        self.btn_remove_nn_layer.setEnabled(False)
+        self.btn_delete_profile.setEnabled(False)
+        self.btn_recover.setEnabled(False)
+        self.btn_save.setEnabled(False)  
+        for inp_nn_layer in self.inp_nn_layers:
+            inp_nn_layer.setEnabled(False)
+
+    def enable_below_profile(self):
+        self.cmb_agent_type.setEnabled(True)
+        #self.btn_add_nn_layer.setEnabled(True)
+        #self.btn_remove_nn_layer.setEnabled(True)
+        self.btn_delete_profile.setEnabled(True)
+        self.btn_recover.setEnabled(True)
+        self.btn_save.setEnabled(True)  
+        for inp_nn_layer in self.inp_nn_layers:
+            inp_nn_layer.setEnabled(True)
 
 config_dir = "agent_game/config"
 
