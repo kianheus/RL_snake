@@ -158,7 +158,6 @@ class MainWindow(QtW.QMainWindow):
 
         # Prepare nn layers QHBox
         self.lyt_nn_layers = QtW.QHBoxLayout()
-        self.create_nn_layer()
 
         # Add items to NN layers layout
         self.lyt_nn_box = QtW.QVBoxLayout()
@@ -232,6 +231,7 @@ class MainWindow(QtW.QMainWindow):
 
         ### Call any methods required at startup
         self.hide_add_profile()
+        self.load_nn_inputs()
 
         self.setCentralWidget(tabs)
 
@@ -245,6 +245,7 @@ class MainWindow(QtW.QMainWindow):
                 self.config_data = json.load(json_file)      
             self.refresh_all()      
             self.hide_add_profile()
+            self.load_nn_inputs()
 
     def show_add_profile(self):
         self.inp_new_profile.show()
@@ -266,7 +267,7 @@ class MainWindow(QtW.QMainWindow):
             self.config_data = json.load(json_file)
 
         self.inp_nn_layers = []
-        self.create_nn_layer()
+        self.load_nn_inputs()
         self.refresh_all()
 
     def delete_profile(self):
@@ -417,6 +418,15 @@ class MainWindow(QtW.QMainWindow):
             self.lyt_nn_layers.addSpacing(10)
         self.lyt_nn_layers.addStretch()
         
+
+    def load_nn_inputs(self):
+        while self.inp_nn_layers:
+            self.remove_nn_layer()
+        for layer in self.config_data["nn_layers"]:
+            if layer != 0:
+                self.create_nn_layer()
+        for i, inp_nn_layer in enumerate(self.inp_nn_layers):
+            inp_nn_layer.setText(str(self.config_data["nn_layers"][i]))
 
     def clear_layout(self, layout: QtW.QBoxLayout):
         while layout.count():
