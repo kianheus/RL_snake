@@ -80,7 +80,7 @@ class MainTab(QtW.QWidget):
         self.cmb_profile.addItems(self.pm.profiles)
         self.cmb_profile.setCurrentText(self.pm.active_profile)
 
-        # Add items to profile selection layout
+        # Fill layout
         self.lyt_profile_select = QtW.QHBoxLayout()
         self.lyt_profile_select.addWidget(self.lbl_profile)
         self.lyt_profile_select.addWidget(self.cmb_profile)
@@ -105,7 +105,7 @@ class MainTab(QtW.QWidget):
         self.btn_create_profile = QtW.QPushButton("Create")
         self.btn_create_profile.setFixedWidth(90)
 
-        # Add items to profile creation layout
+        # Fill layout
         self.lyt_profile_create = QtW.QHBoxLayout()
         self.lyt_profile_create.addWidget(self.inp_new_profile)
         self.lyt_profile_create.addWidget(self.btn_create_profile)
@@ -126,9 +126,7 @@ class MainTab(QtW.QWidget):
         self.cmb_agent_type.addItems(self.pm.agent_types)
         self.cmb_agent_type.setCurrentText(self.pm.config_data["agent_type"])
 
-
-
-        # Add items to agent layout
+        # Add items to layout
         self.lyt_agent = QtW.QHBoxLayout()
         self.lyt_agent.addWidget(self.lbl_agent)
         self.lyt_agent.addWidget(self.cmb_agent_type)
@@ -152,20 +150,19 @@ class MainTab(QtW.QWidget):
         self.btn_remove_nn_layer.setFixedWidth(100)
         self.btn_remove_nn_layer.setEnabled(False)
 
-
+        # Add items to layout
         self.lyt_nn_description = QtW.QHBoxLayout()
         self.lyt_nn_description.addWidget(self.lbl_nn_layers)
         self.lyt_nn_description.addWidget(self.btn_add_nn_layer)
         self.lyt_nn_description.addWidget(self.nn_w_spacer)
         self.lyt_nn_description.addWidget(self.btn_remove_nn_layer)
 
-        # List of nn layers
+        # Prepare list of nn layers
         self.inp_nn_layers = []
 
         # Create small whitespace
         self.nn_h_spacer = QtW.QWidget()
         self.nn_h_spacer.setFixedHeight(10)
-
 
         # Prepare nn layers QHBox
         self.lyt_nn_layers = QtW.QHBoxLayout()
@@ -234,15 +231,12 @@ class MainTab(QtW.QWidget):
     def init_connections(self):
 
         self.cmb_profile.currentTextChanged.connect(self.profile_type_changed)
-
         self.btn_create_profile.clicked.connect(self.create_profile)  
 
         self.cmb_agent_type.currentTextChanged.connect(self.agent_type_changed)
 
         self.btn_add_nn_layer.clicked.connect(self.create_nn_layer)  
-
         self.btn_remove_nn_layer.clicked.connect(self.remove_nn_layer)  
-
 
         self.btn_recover.clicked.connect(self.reset_profile)
         self.btn_delete_profile.clicked.connect(self.delete_profile)
@@ -387,8 +381,6 @@ class MainTab(QtW.QWidget):
 
     def enable_below_profile(self):
         self.cmb_agent_type.setEnabled(True)
-        #self.btn_add_nn_layer.setEnabled(True)
-        #self.btn_remove_nn_layer.setEnabled(True)
         self.btn_delete_profile.setEnabled(True)
         self.btn_recover.setEnabled(True)
         self.btn_save.setEnabled(True)  
@@ -497,20 +489,6 @@ class MainWindow(QtW.QMainWindow):
         """
 
         self.pm = ProfileManager(config_dir=config_dir)
-
-        #self.config_dir = config_dir
-        #cookies_filepath = config_dir + "/cookies.json"
-
-        #with open(cookies_filepath) as json_file:
-        #            cookies = json.load(json_file)
-
-        #self.active_profile = cookies["last_active"]
-        #self.agent_types = cookies["agent_type_options"]
-
-        #profile_filepath = create_config_filepath(self.config_dir, self.active_profile)
-
-        #with open(profile_filepath) as json_file:
-        #    self.config_data = json.load(json_file)
 
         self.profiles = self.pm.get_profiles_from_dir()
         self.active_profile = self.pm.active_profile
