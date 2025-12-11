@@ -15,6 +15,8 @@ class MainWindow(QtW.QMainWindow):
     def __init__(self, config_dir):
         super().__init__()
 
+class ProfileManager():
+    def __init__(self, config_dir):
         self.config_dir = config_dir
         cookies_filepath = config_dir + "/cookies.json"
 
@@ -23,25 +25,61 @@ class MainWindow(QtW.QMainWindow):
 
         self.active_profile = cookies["last_active"]
         self.agent_types = cookies["agent_type_options"]
+        self.cookies = self.load_cookies()
+        self.active_profile = self.cookies["last_active"]
+        self.agent_types = self.cookies["agent_type_options"]
+        self.config_data = self.load_from_profile(self.active_profile)
+        self.profiles = self.get_profiles_from_dir()
 
         profile_filepath = create_config_filepath(config_dir, self.active_profile)
+    def load_cookies(self):
+        cookies_filepath = config_dir + "/cookies.json"
+        with open(cookies_filepath) as f:
+                    cookies = json.load(f)
+        return cookies
+    
+    def load_from_profile(self, profile_name):
+        profile_filepath = create_config_filepath(config_dir, profile_name)
 
         with open(profile_filepath) as json_file:
             self.config_data = json.load(json_file)
+        with open(profile_filepath) as f:
+            config_data = json.load(f)
+        return config_data
+    
+    def save_profile(self, profile_name, data):
+        filepath = create_config_filepath(self.config_dir, profile_name)
+        with open(filepath, "w") as f:
+            json.dump(data, f, indent=4)
 
         self.update_profiles_from_dir()
         
+    def set_active_profile(self, profile_name):
+        self.active_profile = profile_name
+        self.config_data = self.load_from_profile(profile_name)
 
         """     General window settings     """
+    
+    def get_profiles_from_dir(self) -> list[str]:
+        prefix = "config_"
+        suffix = ".json"
 
         window_x = 150
         window_y = 150
+        profiles = [
+            f.removeprefix(prefix).removesuffix(suffix) for f in os.listdir(self.config_dir)
+            if f.startswith(prefix) and f.endswith(suffix)
+        ]
 
         window_width = 500
         window_height = 500
+        profiles.remove("recovery")
+        profiles = sorted(profiles)
+        profiles.append("Add new")
 
         self.setWindowTitle("RL Snake settings")
         self.setFixedSize(QtC.QSize(window_width, window_height))
+        return profiles
 
         """     Tabs     """
         tabs = QtW.QTabWidget()
