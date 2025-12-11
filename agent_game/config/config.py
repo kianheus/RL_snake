@@ -287,7 +287,6 @@ class MainTab(QtW.QWidget):
     def agent_type_changed(self, type_string):
         self.pm.config_data["agent_type"] = type_string
 
-
     def create_nn_layer(self):
         n_layers = len(self.inp_nn_layers)
 
@@ -415,7 +414,6 @@ class MainTab(QtW.QWidget):
             self.lyt_nn_layers.addSpacing(10)
         self.lyt_nn_layers.addStretch()
 
-
     def clear_layout(self, layout: QtW.QBoxLayout):
         while layout.count():
             item = layout.takeAt(0)
@@ -472,7 +470,29 @@ class AdvancedTab(QtW.QWidget):
         self.init_connections()
 
     def init_ui(self):
-        self.placeholder2 = QtW.QWidget()
+
+        ### LR input
+        
+        # Text description
+        self.lbl_lr = QtW.QLabel("Learning rate:")
+
+        # Input box
+        self.inp_lr = QtW.QLineEdit()
+        self.inp_lr.setPlaceholderText("0.001")
+        self.inp_lr.setFixedWidth(100)
+
+        # Add items to layout
+        self.lyt_lr = QtW.QHBoxLayout()
+        self.lyt_lr.addStretch()
+        self.lyt_lr.addWidget(self.lbl_lr)
+        self.lyt_lr.addWidget(self.inp_lr)
+
+
+        ### Add all items to main tab
+
+        self.lyt_main = QtW.QVBoxLayout()
+        self.lyt_main.addLayout(self.lyt_lr)
+        self.setLayout(self.lyt_main)
 
     def init_connections(self):
         pass
