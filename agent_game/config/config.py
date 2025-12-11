@@ -9,29 +9,17 @@ import os
 def create_config_filepath(config_dir, profile_name: str) -> str:
     filepath = config_dir + "/config_" + profile_name + ".json"
     return filepath
-    
 
-class MainWindow(QtW.QMainWindow):
-    def __init__(self, config_dir):
-        super().__init__()
 
 class ProfileManager():
     def __init__(self, config_dir):
         self.config_dir = config_dir
-        cookies_filepath = config_dir + "/cookies.json"
-
-        with open(cookies_filepath) as json_file:
-                    cookies = json.load(json_file)
-
-        self.active_profile = cookies["last_active"]
-        self.agent_types = cookies["agent_type_options"]
         self.cookies = self.load_cookies()
         self.active_profile = self.cookies["last_active"]
         self.agent_types = self.cookies["agent_type_options"]
         self.config_data = self.load_from_profile(self.active_profile)
         self.profiles = self.get_profiles_from_dir()
 
-        profile_filepath = create_config_filepath(config_dir, self.active_profile)
     def load_cookies(self):
         cookies_filepath = config_dir + "/cookies.json"
         with open(cookies_filepath) as f:
@@ -41,8 +29,6 @@ class ProfileManager():
     def load_from_profile(self, profile_name):
         profile_filepath = create_config_filepath(config_dir, profile_name)
 
-        with open(profile_filepath) as json_file:
-            self.config_data = json.load(json_file)
         with open(profile_filepath) as f:
             config_data = json.load(f)
         return config_data
@@ -52,43 +38,36 @@ class ProfileManager():
         with open(filepath, "w") as f:
             json.dump(data, f, indent=4)
 
-        self.update_profiles_from_dir()
-        
     def set_active_profile(self, profile_name):
         self.active_profile = profile_name
         self.config_data = self.load_from_profile(profile_name)
 
-        """     General window settings     """
     
     def get_profiles_from_dir(self) -> list[str]:
         prefix = "config_"
         suffix = ".json"
 
-        window_x = 150
-        window_y = 150
         profiles = [
             f.removeprefix(prefix).removesuffix(suffix) for f in os.listdir(self.config_dir)
             if f.startswith(prefix) and f.endswith(suffix)
         ]
 
-        window_width = 500
-        window_height = 500
         profiles.remove("recovery")
         profiles = sorted(profiles)
         profiles.append("Add new")
 
-        self.setWindowTitle("RL Snake settings")
-        self.setFixedSize(QtC.QSize(window_width, window_height))
         return profiles
 
-        """     Tabs     """
-        tabs = QtW.QTabWidget()
-        tabs.setTabPosition(QtW.QTabWidget.TabPosition.North)
-        tabs.setMovable(True)
 
+class MainTab(QtW.QWidget):
+    def __init__(self, profile_manager):
+        super().__init__()
+        self.pm = profile_manager
+        self.init_ui()
+        self.init_connections()
 
+    def init_ui(self):
 
-        """     Tab Main     """
         self.lyt_main = QtW.QVBoxLayout()
 
         ### Profile selection row
@@ -98,9 +77,8 @@ class ProfileManager():
 
         # Combobox
         self.cmb_profile = QtW.QComboBox()
-        self.cmb_profile.addItems(self.profiles)
-        self.cmb_profile.setCurrentText(self.active_profile)
-        self.cmb_profile.currentTextChanged.connect(self.profile_type_changed)
+        self.cmb_profile.addItems(self.pm.profiles)
+        self.cmb_profile.setCurrentText(self.pm.active_profile)
 
         # Add items to profile selection layout
         self.lyt_profile_select = QtW.QHBoxLayout()
@@ -126,7 +104,6 @@ class ProfileManager():
         # Button
         self.btn_create_profile = QtW.QPushButton("Create")
         self.btn_create_profile.setFixedWidth(90)
-        self.btn_create_profile.clicked.connect(self.create_profile)  
 
         # Add items to profile creation layout
         self.lyt_profile_create = QtW.QHBoxLayout()
@@ -139,18 +116,17 @@ class ProfileManager():
         self.lyt_profile.addLayout(self.lyt_profile_create)
 
 
-
-
         ### Agent selection row
 
         # Text description
         self.lbl_agent = QtW.QLabel("Agent type:")
 
         # Combobox
-        self.cmb_agent_type = QtW.QComboBox(tabs)
-        self.cmb_agent_type.addItems(self.agent_types)
-        self.cmb_agent_type.setCurrentText(self.config_data["agent_type"])
-        self.cmb_agent_type.currentTextChanged.connect(self.agent_type_changed)
+        self.cmb_agent_type = QtW.QComboBox()
+        self.cmb_agent_type.addItems(self.pm.agent_types)
+        self.cmb_agent_type.setCurrentText(self.pm.config_data["agent_type"])
+
+
 
         # Add items to agent layout
         self.lyt_agent = QtW.QHBoxLayout()
@@ -166,7 +142,6 @@ class ProfileManager():
         # New layer button
         self.btn_add_nn_layer = QtW.QPushButton("Add layer")
         self.btn_add_nn_layer.setFixedWidth(100)
-        self.btn_add_nn_layer.clicked.connect(self.create_nn_layer)  
 
         # Small spacer
         self.nn_w_spacer = QtW.QWidget()
@@ -175,7 +150,6 @@ class ProfileManager():
         # Remove layer button
         self.btn_remove_nn_layer = QtW.QPushButton("Remove layer")
         self.btn_remove_nn_layer.setFixedWidth(100)
-        self.btn_remove_nn_layer.clicked.connect(self.remove_nn_layer)  
         self.btn_remove_nn_layer.setEnabled(False)
 
 
@@ -184,7 +158,6 @@ class ProfileManager():
         self.lyt_nn_description.addWidget(self.btn_add_nn_layer)
         self.lyt_nn_description.addWidget(self.nn_w_spacer)
         self.lyt_nn_description.addWidget(self.btn_remove_nn_layer)
-
 
         # List of nn layers
         self.inp_nn_layers = []
@@ -203,24 +176,24 @@ class ProfileManager():
         self.lyt_nn_box.addWidget(self.nn_h_spacer)
         self.lyt_nn_box.addLayout(self.lyt_nn_layers)
 
-
         ### Save/delete/recover buttons row
 
         # Define recover button
         self.btn_recover = QtW.QPushButton("Reset profile")
-        self.btn_recover.setFixedWidth(130)
-        self.btn_recover.clicked.connect(self.reset_profile)
+        self.btn_recover.setFixedWidth(110)
 
         # Define delete button
         self.btn_delete_profile = QtW.QPushButton("Delete profile")
-        self.btn_delete_profile.setFixedWidth(130)
-        self.btn_delete_profile.clicked.connect(self.delete_profile)
+        self.btn_delete_profile.setFixedWidth(110)
         self.awaiting_delete_confirmation = False
 
         # Define save button
         self.btn_save = QtW.QPushButton("Save")
-        self.btn_save.setFixedWidth(130)
-        self.btn_save.clicked.connect(self.save_settings)
+        self.btn_save.setFixedWidth(110)
+        
+        # Define save and run button
+        self.btn_save_and_run = QtW.QPushButton("Save and run")
+        self.btn_save_and_run.setFixedWidth(110)
 
         # Add items to save/recover layout
         self.lyt_save = QtW.QHBoxLayout()
@@ -229,12 +202,10 @@ class ProfileManager():
         self.lyt_save.addWidget(self.btn_delete_profile)
         self.lyt_save.addStretch()
         self.lyt_save.addWidget(self.btn_save)
-
-
+        self.lyt_save.addStretch()
+        self.lyt_save.addWidget(self.btn_save_and_run)
 
         ### Add all items to main tab
-
-
         line_height = self.fontMetrics().height()
 
         self.lyt_main.addLayout(self.lyt_profile)
@@ -254,113 +225,41 @@ class ProfileManager():
         self.lyt_main.setSpacing(0)
 
         ### Get QWidget from lyt_main
-        self.tab_main = QtW.QWidget()
-        self.tab_main.setLayout(self.lyt_main)
-
-
-        """     Tab Advanced     """
-        placeholder2 = QtW.QWidget()
-
-
-
-        tabs.addTab(self.tab_main, "Main")
-        tabs.addTab(placeholder2, "Advanced")
-
+        self.setLayout(self.lyt_main)
 
         ### Call any methods required at startup
         self.hide_add_profile()
         self.load_nn_inputs()
 
-        self.setCentralWidget(tabs)
+    def init_connections(self):
+
+        self.cmb_profile.currentTextChanged.connect(self.profile_type_changed)
+
+        self.btn_create_profile.clicked.connect(self.create_profile)  
+
+        self.cmb_agent_type.currentTextChanged.connect(self.agent_type_changed)
+
+        self.btn_add_nn_layer.clicked.connect(self.create_nn_layer)  
+
+        self.btn_remove_nn_layer.clicked.connect(self.remove_nn_layer)  
+
+
+        self.btn_recover.clicked.connect(self.reset_profile)
+        self.btn_delete_profile.clicked.connect(self.delete_profile)
+        self.btn_save.clicked.connect(self.save_settings)
+        self.btn_save_and_run.clicked.connect(self.save_and_run)
 
     def profile_type_changed(self, type_string):
         if type_string == "Add new":
             self.show_add_profile()
         else:
-            self.active_profile = type_string
-            profile_filepath = create_config_filepath(self.config_dir, self.active_profile)
+            self.pm.active_profile = type_string
+            profile_filepath = create_config_filepath(self.pm.config_dir, self.pm.active_profile)
             with open(profile_filepath) as json_file:
-                self.config_data = json.load(json_file)      
+                self.pm.config_data = json.load(json_file)      
             self.refresh_all()      
             self.hide_add_profile()
             self.load_nn_inputs()
-
-    def show_add_profile(self):
-        self.inp_new_profile.show()
-        self.btn_create_profile.show()
-        self.spacer1.hide()
-        self.disable_below_profile()
-
-    def hide_add_profile(self):
-        self.inp_new_profile.hide()
-        self.btn_create_profile.hide()
-        self.spacer1.show()
-        self.enable_below_profile()    
-
-    def agent_type_changed(self, type_string):
-        self.config_data["agent_type"] = type_string
-
-    def reset_profile(self):
-        with open("agent_game/config/config_recovery.json") as json_file:
-            self.config_data = json.load(json_file)
-
-        self.inp_nn_layers = []
-        self.load_nn_inputs()
-        self.refresh_all()
-
-    def delete_profile(self):
-
-        if self.active_profile == "basic_01" or self.active_profile == "ego_01":
-            self.show_warning_message(title="Invalid remove", message="Cannot remove core profiles.")
-            return
-        
-        if self.awaiting_delete_confirmation:
-            self.btn_delete_profile.setText("Delete profile")
-            self.awaiting_delete_confirmation = False
-            self.profiles.remove(self.active_profile)
-            file_path = create_config_filepath(self.config_dir, self.active_profile)
-            os.remove(file_path)
-            self.active_profile = self.profiles[0]
-            self.refresh_all()  
-        else:
-            self.btn_delete_profile.setText("Confirm delete")
-            self.awaiting_delete_confirmation = True
-
-    def refresh_all(self):
-        self.update_profiles_from_dir()
-        self.alphabetize_profile_options()
-        self.update_nn_inputs()
-
-        self.cmb_agent_type.blockSignals(True)
-        self.cmb_agent_type.setCurrentText(self.config_data["agent_type"])
-        self.cmb_agent_type.blockSignals(False)
-
-        self.cmb_profile.blockSignals(True)
-        self.cmb_profile.clear()
-        self.cmb_profile.addItems(self.profiles)
-        self.cmb_profile.setCurrentText(self.active_profile)
-        self.cmb_profile.blockSignals(False)
-
-        
-
-    def save_settings(self):
-
-
-        # Check if all nn layer inputs are valid
-        for i, inp_nn_layer in enumerate(self.inp_nn_layers):
-            if not inp_nn_layer.text():
-                if len(self.inp_nn_layers) == 1:
-                    self.show_warning_message(title="Invalid nn layer", message="Network needs at least one layer, save cancelled")    
-                else:
-                    self.show_warning_message(title="Invalid nn layer", message="Empty nn layer, save cancelled")
-                return
-            value = int(inp_nn_layer.text())
-            if value > 1024:
-                self.show_warning_message(title="Invalid nn layer", message="nn layer " + str(i+1) + " too large, save cancelled")
-                return
-            self.config_data["nn_layers"][i] = value
-
-        self.create_file()
 
     def create_profile(self):
         name = self.inp_new_profile.text().strip()
@@ -370,51 +269,30 @@ class ProfileManager():
             return
         
         # Avoid adding duplicate profiles
-        if name in self.profiles:
+        if name in self.pm.profiles:
             self.show_warning_message(title="Profile exists", message=f"A profile named '{name}' already exists.")
             return
         
-        # Add to data model
-        # TODO: Add the new profile above the "Add new" option
-        self.profiles.append(name)
+        self.update_config_from_ui()
 
-        self.active_profile = name
-        self.create_file()
+        self.pm.active_profile = name
+        self.pm.save_profile(name, self.pm.config_data)
 
-        self.alphabetize_profile_options()
+        self.pm.profiles.append(name)
 
         self.cmb_profile.blockSignals(True)
         self.cmb_profile.clear()
-        self.cmb_profile.addItems(self.profiles)
+        self.cmb_profile.addItems(self.pm.profiles)
         self.cmb_profile.setCurrentText(name) # TODO: Consider whether this should be in the refresh_all() function
         self.hide_add_profile()
         self.cmb_profile.blockSignals(False)
-
-        #self.refresh_all()
-
-        # Add to UI
-        #self.refresh_all()
-
-
+        
         # Clear input box
         self.inp_new_profile.clear()
 
-    def update_profiles_from_dir(self):
-        prefix = "config_"
-        suffix = ".json"
+    def agent_type_changed(self, type_string):
+        self.pm.config_data["agent_type"] = type_string
 
-        self.profiles = [
-            f.removeprefix(prefix).removesuffix(suffix) for f in os.listdir(self.config_dir)
-            if f.startswith(prefix) and f.endswith(suffix)
-        ]
-
-        self.profiles.remove("recovery")
-        self.profiles.append("Add new")
-        
-    def alphabetize_profile_options(self): 
-        self.profiles.remove("Add new")
-        self.profiles = sorted(self.profiles)
-        self.profiles.append("Add new")
 
     def create_nn_layer(self):
         n_layers = len(self.inp_nn_layers)
@@ -437,52 +315,65 @@ class ProfileManager():
         removed_widget.deleteLater()
         self.update_nn_inputs()
 
-    def update_nn_inputs(self):
+    def reset_profile(self):
+        with open("agent_game/config/config_recovery.json") as f:
+            self.pm.config_data = json.load(f)
 
-        n_layers = len(self.inp_nn_layers)
-        if n_layers >= 5:
-            self.btn_add_nn_layer.setEnabled(False)
-        else:
-            self.btn_add_nn_layer.setEnabled(True)
-        if n_layers <= 1:
-            self.btn_remove_nn_layer.setEnabled(False)
-        else:
-            self.btn_remove_nn_layer.setEnabled(True)
+        self.inp_nn_layers = []
+        self.load_nn_inputs()
+        self.refresh_all()
 
-        self.clear_layout(self.lyt_nn_layers)
+    def delete_profile(self):
 
-        for inp_nn_layer in self.inp_nn_layers:
-            self.lyt_nn_layers.addWidget(inp_nn_layer)
-            self.lyt_nn_layers.addSpacing(10)
-        self.lyt_nn_layers.addStretch()
+        if self.pm.active_profile == "basic_01" or self.pm.active_profile == "ego_01":
+            self.show_warning_message(title="Invalid remove", message="Cannot remove core profiles.")
+            return
         
+        if self.awaiting_delete_confirmation:
+            self.btn_delete_profile.setText("Delete profile")
+            self.awaiting_delete_confirmation = False
+            self.pm.profiles.remove(self.pm.active_profile)
+            file_path = create_config_filepath(self.pm.config_dir, self.pm.active_profile)
+            os.remove(file_path)
+            self.pm.active_profile = self.pm.profiles[0]
+            self.refresh_all()  
+        else:
+            self.btn_delete_profile.setText("Confirm delete")
+            self.awaiting_delete_confirmation = True
 
-    def load_nn_inputs(self):
-        while self.inp_nn_layers:
-            self.remove_nn_layer()
-        for layer in self.config_data["nn_layers"]:
-            if layer != 0:
-                self.create_nn_layer()
+    def save_settings(self):
+
+        # Check if all nn layer inputs are valid
         for i, inp_nn_layer in enumerate(self.inp_nn_layers):
-            inp_nn_layer.setText(str(self.config_data["nn_layers"][i]))
+            if not inp_nn_layer.text():
+                if len(self.inp_nn_layers) == 1:
+                    self.show_warning_message(title="Invalid nn layer", message="Network needs at least one layer, save cancelled")    
+                else:
+                    self.show_warning_message(title="Invalid nn layer", message="Empty nn layer, save cancelled")
+                return
+            value = int(inp_nn_layer.text())
+            if value > 1024:
+                self.show_warning_message(title="Invalid nn layer", message="nn layer " + str(i+1) + " too large, save cancelled")
+                return
+            self.pm.config_data["nn_layers"][i] = value
 
-    def clear_layout(self, layout: QtW.QBoxLayout):
-        while layout.count():
-            item = layout.takeAt(0)
-            widget = item.widget()
-            if widget is not None:
-                layout.removeWidget(widget)
+        self.create_file()
 
-    def show_warning_message(self, title, message):
-        QtW.QMessageBox.warning(self, title, message)
+    def save_and_run(self):
+        self.save_settings()
+        self.window().close()
 
-    def create_file(self):
-        # Generate file string to save config data to
-        file_string = "agent_game/config/config_" + self.active_profile + ".json"
+    def show_add_profile(self):
+        self.inp_new_profile.show()
+        self.btn_create_profile.show()
+        self.spacer1.hide()
+        self.disable_below_profile()
 
-        # Save config data
-        with open(file_string, "w") as json_file:
-            json.dump(self.config_data, json_file, indent=4)
+    def hide_add_profile(self):
+        self.inp_new_profile.hide()
+        self.btn_create_profile.hide()
+        self.spacer1.show()
+        self.enable_below_profile()  
 
     def disable_below_profile(self):
         self.cmb_agent_type.setEnabled(False)
@@ -503,6 +394,157 @@ class ProfileManager():
         self.btn_save.setEnabled(True)  
         for inp_nn_layer in self.inp_nn_layers:
             inp_nn_layer.setEnabled(True)
+
+    def load_nn_inputs(self):
+        while self.inp_nn_layers:
+            self.remove_nn_layer()
+        for layer in self.pm.config_data["nn_layers"]:
+            if layer != 0:
+                self.create_nn_layer()
+        for i, inp_nn_layer in enumerate(self.inp_nn_layers):
+            inp_nn_layer.setText(str(self.pm.config_data["nn_layers"][i]))
+
+    def update_nn_inputs(self):
+
+        n_layers = len(self.inp_nn_layers)
+        if n_layers >= 5:
+            self.btn_add_nn_layer.setEnabled(False)
+        else:
+            self.btn_add_nn_layer.setEnabled(True)
+        if n_layers <= 1:
+            self.btn_remove_nn_layer.setEnabled(False)
+        else:
+            self.btn_remove_nn_layer.setEnabled(True)
+
+        self.clear_layout(self.lyt_nn_layers)
+
+        for inp_nn_layer in self.inp_nn_layers:
+            self.lyt_nn_layers.addWidget(inp_nn_layer)
+            self.lyt_nn_layers.addSpacing(10)
+        self.lyt_nn_layers.addStretch()
+
+
+    def clear_layout(self, layout: QtW.QBoxLayout):
+        while layout.count():
+            item = layout.takeAt(0)
+            widget = item.widget()
+            if widget is not None:
+                layout.removeWidget(widget)
+
+    def refresh_all(self):
+        profiles = self.pm.get_profiles_from_dir()
+        self.update_nn_inputs()
+
+        self.cmb_agent_type.blockSignals(True)
+        self.cmb_agent_type.setCurrentText(self.pm.config_data["agent_type"])
+        self.cmb_agent_type.blockSignals(False)
+
+        self.cmb_profile.blockSignals(True)
+        self.cmb_profile.clear()
+        self.cmb_profile.addItems(self.pm.profiles)
+        self.cmb_profile.setCurrentText(self.pm.active_profile)
+        self.cmb_profile.blockSignals(False)
+
+    def update_config_from_ui(self):
+        # Copy agent type
+        self.pm.config_data["agent_type"] = self.cmb_agent_type.currentText()
+
+        # Copy NN layers from the QLineEdits
+        nn_layers = []
+        for inp_nn_layer in self.inp_nn_layers:
+            text = inp_nn_layer.text()
+            if text:
+                nn_layers.append(int(text))
+            else:
+                nn_layers.append(0)
+        self.pm.config_data["nn_layers"] = nn_layers
+
+    def show_warning_message(self, title, message):
+        QtW.QMessageBox.warning(self, title, message)
+
+    def create_file(self):
+        # Generate file string to save config data to
+        file_string = "agent_game/config/config_" + self.pm.active_profile + ".json"
+
+        # Save config data
+        with open(file_string, "w") as json_file:
+            json.dump(self.pm.config_data, json_file, indent=4)
+
+
+
+class AdvancedTab(QtW.QWidget):
+    def __init__(self, profile_manager):
+        super().__init__()
+        self.pm = profile_manager
+        self.init_ui()
+        self.init_connections()
+
+    def init_ui(self):
+        self.placeholder2 = QtW.QWidget()
+
+    def init_connections(self):
+        pass
+
+class MainWindow(QtW.QMainWindow):
+    def __init__(self, config_dir):
+        super().__init__()
+        
+        """
+        self.load_initial_data()
+        self.init_ui()
+        self.init_connections()
+        self.refresh_all()
+        """
+
+        self.pm = ProfileManager(config_dir=config_dir)
+
+        #self.config_dir = config_dir
+        #cookies_filepath = config_dir + "/cookies.json"
+
+        #with open(cookies_filepath) as json_file:
+        #            cookies = json.load(json_file)
+
+        #self.active_profile = cookies["last_active"]
+        #self.agent_types = cookies["agent_type_options"]
+
+        #profile_filepath = create_config_filepath(self.config_dir, self.active_profile)
+
+        #with open(profile_filepath) as json_file:
+        #    self.config_data = json.load(json_file)
+
+        self.profiles = self.pm.get_profiles_from_dir()
+        self.active_profile = self.pm.active_profile
+        self.config_data = self.pm.config_data
+        
+
+        """     General window settings     """
+
+        window_x = 150
+        window_y = 150
+
+        window_width = 500
+        window_height = 500
+
+        self.setWindowTitle("RL Snake settings")
+        self.setFixedSize(QtC.QSize(window_width, window_height))
+
+        """     Tabs     """
+        tabs = QtW.QTabWidget()
+        tabs.setTabPosition(QtW.QTabWidget.TabPosition.North)
+        tabs.setMovable(True)
+
+
+        tabs.addTab(MainTab(self.pm), "Main")
+        tabs.addTab(AdvancedTab(self.pm), "Advanced")
+
+        self.setCentralWidget(tabs)
+
+    def init_ui(self):
+        pass 
+
+    def init_connections(self):
+        pass  
+
 
 config_dir = "agent_game/config"
 
