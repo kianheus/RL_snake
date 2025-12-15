@@ -2,21 +2,26 @@
 Main file to run RL snake simulations
 """
 
-import pygame
 
-from agent_game.agent_constructor import Agent
+from config.config import run_config
+
+config_dir = "agent_game/config"
+active_profile, config_data = run_config(config_dir)
+
+import pygame
+from agent_constructor import Agent
 from game_logic import Game
 from plotter import plot
 
-MAX_MEMORY = 10000
-BATCH_SIZE = 1000
-LR = 0.001
-gamma = 0.9
 
-#TODO: Make an interactive display to choose parameters for different types of agents
+agent_type = config_data["agent_type"]
+NN_layers = [layer for layer in config_data["nn_layers"] if layer != 0]
+occupance_size = config_data["occupance_size"]
 
-agent_type = "ego" # Choose from "ego", "basic", "conv"
-NN_layers = [128, 64, 64] # Size of hidden layers (fully connected with ReLU activation)
+MAX_MEMORY = config_data["max_memory"]
+BATCH_SIZE = config_data["batch_size"]
+LR = config_data["lr"]
+gamma = config_data["gamma"]
 
 
 
@@ -36,7 +41,7 @@ def train():
     total_score = 0
     mean_window = 100
     record = 0
-    agent = Agent.from_type("ego",
+    agent = Agent.from_type(agent_type=agent_type,
                             NN_layers=NN_layers,
                             occupance_size=occupance_size,
                             LR=LR,
