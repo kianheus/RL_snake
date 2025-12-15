@@ -359,7 +359,7 @@ class MainTab(QtW.QWidget):
                 return
             self.pm.config_data["nn_layers"][i] = value
 
-        self.create_file()
+        self.pm.save_profile(self.pm.active_profile, self.pm.config_data)
 
     def save_and_run(self):
         self.save_settings()
@@ -460,15 +460,6 @@ class MainTab(QtW.QWidget):
 
     def show_warning_message(self, title, message):
         QtW.QMessageBox.warning(self, title, message)
-
-    def create_file(self):
-        # Generate file string to save config data to
-        file_string = "agent_game/config/config_" + self.pm.active_profile + ".json"
-
-        # Save config data
-        with open(file_string, "w") as json_file:
-            json.dump(self.pm.config_data, json_file, indent=4)
-
 
 
 class AdvancedTab(QtW.QWidget):
