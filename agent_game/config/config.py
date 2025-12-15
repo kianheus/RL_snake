@@ -159,6 +159,8 @@ class MainTab(QtW.QWidget):
         # Input field
 
         self.inp_ego_occupance = QtW.QLineEdit()
+        ego_occupance_validator = QtG.QIntValidator(1, 21)
+        self.inp_ego_occupance.setValidator(ego_occupance_validator) 
         self.inp_ego_occupance.setFixedWidth(50)
         self.inp_ego_occupance.setPlaceholderText("7")
 
@@ -265,6 +267,7 @@ class MainTab(QtW.QWidget):
 
         ### Call any methods required at startup
         self.hide_add_profile()
+        self.hide_occupance_input()
         self.load_nn_inputs()
 
     def init_connections(self):
@@ -274,6 +277,8 @@ class MainTab(QtW.QWidget):
 
         self.cmb_agent_type.currentTextChanged.connect(self.agent_type_changed)
 
+        self.inp_ego_occupance.textChanged.connect(self.occupance_input_changed)
+
         self.btn_add_nn_layer.clicked.connect(self.create_nn_layer)  
         self.btn_remove_nn_layer.clicked.connect(self.remove_nn_layer)  
 
@@ -281,6 +286,9 @@ class MainTab(QtW.QWidget):
         self.btn_delete_profile.clicked.connect(self.delete_profile)
         self.btn_save.clicked.connect(self.save_settings)
         self.btn_save_and_run.clicked.connect(self.save_and_run)
+
+    def occupance_input_changed(self, size_string):
+        self.pm.config_data["occupance_size"] = int(size_string) if size_string.isdigit() else 0
 
     def profile_type_changed(self, type_string):
         if type_string == "Add new":
@@ -316,6 +324,10 @@ class MainTab(QtW.QWidget):
 
     def agent_type_changed(self, type_string):
         self.pm.config_data["agent_type"] = type_string
+        if type_string == "Ego":
+            self.show_occupance_input()
+        else:
+            self.hide_occupance_input()
 
     def create_nn_layer(self):
         n_layers = len(self.inp_nn_layers)
@@ -396,6 +408,17 @@ class MainTab(QtW.QWidget):
         self.spacer1.show()
         self.enable_below_profile()  
 
+    def show_occupance_input(self):
+        self.lbl_ego_occupance.show()
+        self.inp_ego_occupance.show()
+        self.spacer2.hide()
+    
+    def hide_occupance_input(self):
+        self.lbl_ego_occupance.hide()
+        self.inp_ego_occupance.hide()
+        self.spacer2.show()
+
+
     def disable_below_profile(self):
         self.cmb_agent_type.setEnabled(False)
         self.btn_add_nn_layer.setEnabled(False)
@@ -448,14 +471,15 @@ class MainTab(QtW.QWidget):
             widget = item.widget()
             if widget is not None:
                 layout.removeWidget(widget)
+        
 
     def refresh_all(self):
         profiles = self.pm.get_profiles_from_dir()
         self.update_nn_inputs()
 
-        self.cmb_agent_type.blockSignals(True)
+        #self.cmb_agent_type.blockSignals(True)
         self.cmb_agent_type.setCurrentText(self.pm.config_data["agent_type"])
-        self.cmb_agent_type.blockSignals(False)
+        #self.cmb_agent_type.blockSignals(False)
 
         self.cmb_profile.blockSignals(True)
         self.cmb_profile.clear()
