@@ -151,6 +151,24 @@ class MainTab(QtW.QWidget):
         self.lyt_agent.addWidget(self.lbl_agent)
         self.lyt_agent.addWidget(self.cmb_agent_type)
 
+        ### Ego agent occupance row
+
+        # Text description
+        self.lbl_ego_occupance = QtW.QLabel("Occupance size:")
+
+        # Input field
+
+        self.inp_ego_occupance = QtW.QLineEdit()
+        self.inp_ego_occupance.setFixedWidth(50)
+        self.inp_ego_occupance.setPlaceholderText("7")
+
+        # Fill layout
+        self.lyt_ego_occupance = QtW.QHBoxLayout()
+        self.lyt_ego_occupance.addStretch()
+        self.lyt_ego_occupance.addWidget(self.lbl_ego_occupance)
+        self.lyt_ego_occupance.addSpacing(10)
+        self.lyt_ego_occupance.addWidget(self.inp_ego_occupance)
+
 
         ### NN layers selection box
 
@@ -230,6 +248,7 @@ class MainTab(QtW.QWidget):
         self.spacer1.setFixedHeight(self.profile_row_height)
         self.lyt_main.addWidget(self.spacer1)
         self.lyt_main.addLayout(self.lyt_agent)
+        self.lyt_main.addLayout(self.lyt_ego_occupance)
         self.spacer2 = QtW.QWidget()
         self.spacer2.setFixedHeight(self.profile_row_height)
         self.lyt_main.addWidget(self.spacer2)
