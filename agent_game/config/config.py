@@ -376,6 +376,13 @@ class MainTab(QtW.QWidget):
 
     def save_settings(self):
 
+        if self.pm.config_data["agent_type"] == "Ego":
+            if self.pm.config_data["occupance_size"] % 2 == 0:
+                self.show_warning_message(title="Even occupance size", message="Occupance size must be an odd number")
+                return
+        else:
+            self.pm.config_data["occupance_size"] = 0
+
         # Check if all nn layer inputs are valid
         for i, inp_nn_layer in enumerate(self.inp_nn_layers):
             if not inp_nn_layer.text():
