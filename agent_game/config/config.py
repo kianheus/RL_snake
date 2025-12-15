@@ -21,18 +21,38 @@ class ProfileManager():
         self.profiles = self.get_profiles_from_dir()
 
     def load_cookies(self):
-        cookies_filepath = config_dir + "/cookies.json"
+        cookies_filepath = self.config_dir + "/cookies.json"
         with open(cookies_filepath) as f:
                     cookies = json.load(f)
         return cookies
     
     def load_from_profile(self, profile_name):
-        profile_filepath = create_config_filepath(config_dir, profile_name)
+        profile_filepath = create_config_filepath(self.config_dir, profile_name)
 
         with open(profile_filepath) as f:
             config_data = json.load(f)
         return config_data
     
+    def create_profile(self, profile_name):
+        profile_name = profile_name
+        
+        # Check if any new profile name was entered
+        if not profile_name:
+            return False, "Empty profile name", "Profile name cannot be empty"
+        
+        # Avoid adding duplicate profiles
+        if profile_name in self.profiles:
+            return False, "Profile exists", f"A profile named '{profile_name}' already exists."
+        
+        self.save_profile(profile_name, self.config_data)
+
+        self.profiles.append(profile_name)
+        self.active_profile = profile_name
+        self.save_profile(profile_name, self.config_data)
+
+
+        return True, "Succesful creation", "Profile created succesfully"
+
     def save_profile(self, profile_name, data):
         filepath = create_config_filepath(self.config_dir, profile_name)
         with open(filepath, "w") as f:
@@ -60,7 +80,7 @@ class ProfileManager():
 
 
 class MainTab(QtW.QWidget):
-    def __init__(self, profile_manager):
+    def __init__(self, profile_manager: ProfileManager):
         super().__init__()
         self.pm = profile_manager
         self.init_ui()
@@ -231,7 +251,7 @@ class MainTab(QtW.QWidget):
     def init_connections(self):
 
         self.cmb_profile.currentTextChanged.connect(self.profile_type_changed)
-        self.btn_create_profile.clicked.connect(self.create_profile)  
+        self.btn_create_profile.clicked.connect(self.handle_profile_creation)  
 
         self.cmb_agent_type.currentTextChanged.connect(self.agent_type_changed)
 
@@ -254,34 +274,24 @@ class MainTab(QtW.QWidget):
             self.refresh_all()      
             self.hide_add_profile()
             self.load_nn_inputs()
+    def handle_profile_creation(self):
+        profile_name = self.inp_new_profile.text().strip()
+        ok, title, msg = self.pm.create_profile(profile_name)
 
-    def create_profile(self):
-        name = self.inp_new_profile.text().strip()
-        
-        # Check if any new profile name was entered
-        if not name:
+        if not ok:
+            self.show_warning_message("Profile error", title, msg)
             return
-        
-        # Avoid adding duplicate profiles
-        if name in self.pm.profiles:
-            self.show_warning_message(title="Profile exists", message=f"A profile named '{name}' already exists.")
-            return
-        
+
         self.update_config_from_ui()
-
-        self.pm.active_profile = name
-        self.pm.save_profile(name, self.pm.config_data)
-
-        self.pm.profiles.append(name)
 
         self.cmb_profile.blockSignals(True)
         self.cmb_profile.clear()
         self.cmb_profile.addItems(self.pm.profiles)
-        self.cmb_profile.setCurrentText(name) # TODO: Consider whether this should be in the refresh_all() function
-        self.hide_add_profile()
+        self.cmb_profile.setCurrentText(profile_name) # TODO: Consider whether this should be in the refresh_all() function
         self.cmb_profile.blockSignals(False)
         
         # Clear input box
+        self.hide_add_profile()
         self.inp_new_profile.clear()
 
     def agent_type_changed(self, type_string):
