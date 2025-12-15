@@ -1,0 +1,11 @@
+{
+    "agent_type": "Basic",
+    "nn_layers": [
+        64,
+        0,
+        0,
+        0,
+        0
+    ],
+    "occupance_size": 0
+}
