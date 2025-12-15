@@ -605,9 +605,13 @@ class MainWindow(QtW.QMainWindow):
 config_dir = "agent_game/config"
 
 
-app = QtW.QApplication([])
+def run_config(config_dir: str):
+    app = QtW.QApplication([])
+    window = MainWindow(config_dir=config_dir)
+    window.show()
+    app.exec()
 
-window = MainWindow(config_dir=config_dir)
-window.show()
+    return window.pm.active_profile, window.pm.config_data
 
-app.exec()
+if __name__ == "__main__":
+    run_config(config_dir=config_dir)
