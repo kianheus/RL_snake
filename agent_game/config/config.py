@@ -274,6 +274,7 @@ class MainTab(QtW.QWidget):
             self.refresh_all()      
             self.hide_add_profile()
             self.load_nn_inputs()
+
     def handle_profile_creation(self):
         profile_name = self.inp_new_profile.text().strip()
         ok, title, msg = self.pm.create_profile(profile_name)
@@ -305,9 +306,7 @@ class MainTab(QtW.QWidget):
         inp_nn_layer.setFixedWidth(60)
 
         # Ensure that only valid expressions can be profile names
-        nn_validator = QtG.QRegularExpressionValidator(
-            QtC.QRegularExpression("[0-9]+")
-        )
+        nn_validator = QtG.QIntValidator(1, 1024)
         inp_nn_layer.setValidator(nn_validator)  
 
         self.inp_nn_layers.append(inp_nn_layer)
