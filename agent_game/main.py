@@ -3,10 +3,10 @@ Main file to run RL snake simulations
 """
 
 
-from config.config import run_config
+from config.UI.main_window import run_main_window
 
-config_dir = "agent_game/config"
-active_profile, config_data = run_config(config_dir)
+config_dir = "agent_game/config/config_files"
+active_profile, config_data = run_main_window(config_dir)
 
 import pygame
 from agent_constructor import Agent
