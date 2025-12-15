@@ -76,7 +76,7 @@ class MainTab(QtW.QWidget):
         # Combobox
         self.cmb_agent_type = QtW.QComboBox()
         self.cmb_agent_type.addItems(self.pm.agent_types)
-        self.cmb_agent_type.setCurrentText(self.pm.config_data["agent_type"])
+        self.cmb_agent_type.setCurrentText(self.pm.config_data.agent_type)
 
         # Add items to layout
         self.lyt_agent = QtW.QHBoxLayout()
@@ -220,7 +220,7 @@ class MainTab(QtW.QWidget):
         self.btn_save_and_run.clicked.connect(self.save_and_run)
 
     def occupance_input_changed(self, size_string):
-        self.pm.config_data["occupance_size"] = int(size_string) if size_string.isdigit() else 0
+        self.pm.config_data.occupance_size = int(size_string) if size_string.isdigit() else 0
 
     def profile_type_changed(self, type_string):
         if type_string == "Add new":
@@ -255,7 +255,7 @@ class MainTab(QtW.QWidget):
         self.inp_new_profile.clear()
 
     def agent_type_changed(self, type_string):
-        self.pm.config_data["agent_type"] = type_string
+        self.pm.config_data.agent_type = type_string
         if type_string == "Ego":
             self.show_occupance_input()
         else:
@@ -308,12 +308,12 @@ class MainTab(QtW.QWidget):
 
     def save_settings(self):
 
-        if self.pm.config_data["agent_type"] == "Ego":
-            if self.pm.config_data["occupance_size"] % 2 == 0:
+        if self.pm.config_data.agent_type == "Ego":
+            if self.pm.config_data.occupance_size % 2 == 0:
                 self.show_warning_message(title="Even occupance size", message="Occupance size must be an odd number")
                 return
         else:
-            self.pm.config_data["occupance_size"] = 0
+            self.pm.config_data.occupance_size = 0
 
         # Check if all nn layer inputs are valid
         for i, inp_nn_layer in enumerate(self.inp_nn_layers):
@@ -327,7 +327,7 @@ class MainTab(QtW.QWidget):
             if value > 1024:
                 self.show_warning_message(title="Invalid nn layer", message="nn layer " + str(i+1) + " too large, save cancelled")
                 return
-            self.pm.config_data["nn_layers"][i] = value
+            self.pm.config_data.nn_layers[i] = value
 
         self.pm.save_profile(self.pm.active_profile, self.pm.config_data)
 
@@ -379,11 +379,11 @@ class MainTab(QtW.QWidget):
     def load_nn_inputs(self):
         while self.inp_nn_layers:
             self.remove_nn_layer()
-        for layer in self.pm.config_data["nn_layers"]:
+        for layer in self.pm.config_data.nn_layers:
             if layer != 0:
                 self.create_nn_layer()
         for i, inp_nn_layer in enumerate(self.inp_nn_layers):
-            inp_nn_layer.setText(str(self.pm.config_data["nn_layers"][i]))
+            inp_nn_layer.setText(str(self.pm.config_data.nn_layers[i]))
 
     def update_nn_inputs(self):
 
@@ -417,7 +417,7 @@ class MainTab(QtW.QWidget):
         self.update_nn_inputs()
 
         #self.cmb_agent_type.blockSignals(True)
-        self.cmb_agent_type.setCurrentText(self.pm.config_data["agent_type"])
+        self.cmb_agent_type.setCurrentText(self.pm.config_data.agent_type)
         #self.cmb_agent_type.blockSignals(False)
 
         self.cmb_profile.blockSignals(True)
@@ -428,7 +428,7 @@ class MainTab(QtW.QWidget):
 
     def update_config_from_ui(self):
         # Copy agent type
-        self.pm.config_data["agent_type"] = self.cmb_agent_type.currentText()
+        self.pm.config_data.agent_type = self.cmb_agent_type.currentText()
 
         # Copy NN layers from the QLineEdits
         nn_layers = []
@@ -438,7 +438,7 @@ class MainTab(QtW.QWidget):
                 nn_layers.append(int(text))
             else:
                 nn_layers.append(0)
-        self.pm.config_data["nn_layers"] = nn_layers
+        self.pm.config_data.nn_layers = nn_layers
 
     def show_warning_message(self, title, message):
         QtW.QMessageBox.warning(self, title, message)

@@ -14,14 +14,14 @@ from game_logic import Game
 from plotter import plot
 
 
-agent_type = config_data["agent_type"]
-NN_layers = [layer for layer in config_data["nn_layers"] if layer != 0]
-occupance_size = config_data["occupance_size"]
+agent_type = config_data.agent_type
+NN_layers = [layer for layer in config_data.nn_layers if layer != 0]
+occupance_size = config_data.occupance_size
 
-MAX_MEMORY = config_data["max_memory"]
-BATCH_SIZE = config_data["batch_size"]
-LR = config_data["lr"]
-gamma = config_data["gamma"]
+MAX_MEMORY = config_data.max_memory
+BATCH_SIZE = config_data.batch_size
+LR = config_data.lr
+gamma = config_data.gamma
 
 
 
