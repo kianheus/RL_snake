@@ -26,10 +26,6 @@ class ConfigController(QtC.QObject):
         self.config = self.pr.load_from_profile(profile_name)
         self.profile_changed.emit(profile_name)
         self.config_changed.emit(self.config)
-
-    #def set_active_profile(self, profile_name):
-    #    self.active_profile = profile_name
-    #    self.config = self.pr.load_from_profile(profile_name)
     
     def create_profile(self, profile_name: str):
         # Check if any new profile name was entered
@@ -42,3 +38,6 @@ class ConfigController(QtC.QObject):
         
         self.pr.save_profile(profile_name, self.config)
         self.switch_profile(profile_name)
+
+    def save(self):
+        self.pr.save_profile(self.active_profile, self.config)
