@@ -56,7 +56,7 @@ class ProfileRepository():
 
         profiles.remove("recovery")
         profiles = sorted(profiles)
-        profiles.append("Add new")
-
+        #profiles.append("Add new")
+        print("You should add the profile 'Add new' somewhere in the UI code")
         return profiles
 
