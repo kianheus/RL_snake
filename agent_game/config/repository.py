@@ -23,16 +23,14 @@ class ProfileRepository():
     def load_cookies(self):
         cookies_filepath = self.config_dir + "/cookies.json"
         with open(cookies_filepath) as f:
-                    cookies = json.load(f)
-        return cookies
+                    return json.load(f)
     
     def load_from_profile(self, profile_name: str) -> AgentConfig:
         path = create_config_filepath(self.config_dir, profile_name)
 
         with open(path) as f:
-            config_data = config_from_dict(json.load(f))
-        return config_data
-    
+            return config_from_dict(json.load(f))
+
     def create_profile(self, profile_name):
         profile_name = profile_name
         
