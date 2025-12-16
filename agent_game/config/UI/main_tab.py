@@ -77,8 +77,8 @@ class MainTab(QtW.QWidget):
 
         # Combobox
         self.cmb_agent_type = QtW.QComboBox()
-        self.cmb_agent_type.addItems(self.pm.agent_types)
-        self.cmb_agent_type.setCurrentText(self.pm.config_data.agent_type)
+        self.cmb_agent_type.addItems(self.cc.available_agent_types())
+        self.cmb_agent_type.setCurrentText(self.cc.config.agent_type)
 
         # Add items to layout
         self.lyt_agent = QtW.QHBoxLayout()

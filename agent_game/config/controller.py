@@ -1,7 +1,7 @@
 import PyQt6.QtCore as QtC
 
 from config.repository import ProfileRepository
-from config.model import AgentConfig
+from config.model import AgentConfig, AgentType
 
 
 class ConfigController(QtC.QObject):
@@ -45,3 +45,5 @@ class ConfigController(QtC.QObject):
     def available_profiles(self) -> list[str]:
         return self.pr.list_profiles()
 
+    def available_agent_types(self) -> list[str]:
+        return [a.value for a in AgentType]
