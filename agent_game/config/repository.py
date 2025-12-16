@@ -31,7 +31,19 @@ class ProfileRepository():
         with open(path) as f:
             return config_from_dict(json.load(f))
 
+    def save_profile(self, profile_name: str, config: AgentConfig):
+        path = create_config_filepath(self.config_dir, profile_name)
+        with open(path, "w") as f:
+            json.dump(dict_from_config(config), f, indent=4)   
+
     def create_profile(self, profile_name):
+        path = create_config_filepath(self.config_dir, profile_name)
+        if os.path.exists(path):
+             raise FileExistsError(profile_name)
+        self.save_profile(profile_name)
+        
+
+        """
         profile_name = profile_name
         
         # Check if any new profile name was entered
@@ -45,20 +57,11 @@ class ProfileRepository():
         self.save_profile(profile_name, self.config_data)
 
         self.profiles.append(profile_name)
-        self.active_profile = profile_name
         self.save_profile(profile_name, self.config_data)
 
 
         return True, "Succesful creation", "Profile created succesfully"
-
-    def save_profile(self, profile_name: str, config: AgentConfig):
-        filepath = create_config_filepath(self.config_dir, profile_name)
-        with open(filepath, "w") as f:
-            json.dump(dict_from_config(config), f, indent=4)
-
-    def set_active_profile(self, profile_name):
-        self.active_profile = profile_name
-        self.config_data = self.load_from_profile(profile_name)
+        """
 
     
     def list_profiles(self) -> list[str]:
