@@ -33,7 +33,7 @@ class ConfigController(QtC.QObject):
             raise ValueError("Profile name cannot be empty.")
         
         # Avoid adding duplicate profiles
-        if profile_name in self.profiles:
+        if profile_name in self.pr.list_profiles():
             raise ValueError(f"A profile named '{profile_name}' already exists.")
         
         self.pr.save_profile(profile_name, self.config)
