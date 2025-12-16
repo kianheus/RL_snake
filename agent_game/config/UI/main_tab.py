@@ -227,9 +227,7 @@ class MainTab(QtW.QWidget):
             self.show_add_profile()
         else:
             self.pm.active_profile = type_string
-            profile_filepath = create_config_filepath(self.pm.config_dir, self.pm.active_profile)
-            #with open(profile_filepath) as json_file:
-            #    self.pm.config_data = json.load(json_file)      
+            profile_filepath = create_config_filepath(self.pm.config_dir, self.pm.active_profile)   
             self.pm.config_data = self.pm.load_from_profile(type_string)
             self.refresh_all()      
             self.hide_add_profile()
@@ -414,7 +412,7 @@ class MainTab(QtW.QWidget):
         
 
     def refresh_all(self):
-        profiles = self.pm.get_profiles_from_dir()
+        profiles = self.pm.list_profiles()
         self.update_nn_inputs()
 
         #self.cmb_agent_type.blockSignals(True)

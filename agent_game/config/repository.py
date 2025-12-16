@@ -14,7 +14,7 @@ class ProfileRepository():
         self.cookies = self.load_cookies()
         self.startup_profile = self.cookies["last_active"]
         self.agent_types = self.cookies["agent_type_options"]
-        self.profiles = self.get_profiles_from_dir()
+        self.profiles = self.list_profiles()
 
         ### No longer in ProfileRepository
         #self.config_data = self.load_from_profile(self.active_profile)
@@ -63,12 +63,13 @@ class ProfileRepository():
         self.config_data = self.load_from_profile(profile_name)
 
     
-    def get_profiles_from_dir(self) -> list[str]:
+    def list_profiles(self) -> list[str]:
         prefix = "config_"
         suffix = ".json"
 
         profiles = [
-            f.removeprefix(prefix).removesuffix(suffix) for f in os.listdir(self.config_dir)
+            f.removeprefix(prefix).removesuffix(suffix) 
+            for f in os.listdir(self.config_dir)
             if f.startswith(prefix) and f.endswith(suffix)
         ]
 
