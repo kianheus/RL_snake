@@ -2,6 +2,7 @@ import PyQt6.QtWidgets as QtW
 import PyQt6.QtCore as QtC
 
 from agent_game.config.repository import ProfileRepository
+from agent_game.config.controller import ConfigController
 from agent_game.config.UI.main_tab import MainTab
 from agent_game.config.UI.advanced_tab import AdvancedTab
 
@@ -16,7 +17,8 @@ class MainWindow(QtW.QMainWindow):
         self.refresh_all()
         """
 
-        self.pm = ProfileRepository(config_dir=config_dir)
+        self.pr = ProfileRepository(config_dir=config_dir)
+        self.cc = ConfigController(pr=self.pr)
 
         #self.profiles = self.pm.get_profiles_from_dir()
         #self.active_profile = self.pm.active_profile
@@ -40,8 +42,8 @@ class MainWindow(QtW.QMainWindow):
         tabs.setMovable(True)
 
 
-        tabs.addTab(MainTab(self.pm), "Main")
-        tabs.addTab(AdvancedTab(self.pm), "Advanced")
+        tabs.addTab(MainTab(config_controller=self.cc), "Main")
+        tabs.addTab(AdvancedTab(config_controller=self.cc), "Advanced")
 
         self.setCentralWidget(tabs)
 

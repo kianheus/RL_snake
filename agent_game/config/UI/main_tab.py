@@ -5,6 +5,7 @@ import PyQt6.QtGui as QtG
 import json
 import os
 
+from agent_game.config.controller import ConfigController
 from agent_game.config.repository import ProfileRepository, create_config_filepath 
 # TODO: That create_config_filepath import probably shouldn't have to exist
 
@@ -12,9 +13,9 @@ from agent_game.config.repository import ProfileRepository, create_config_filepa
 
 
 class MainTab(QtW.QWidget):
-    def __init__(self, profile_manager: ProfileRepository):
+    def __init__(self, config_controller: ConfigController):
         super().__init__()
-        self.pm = profile_manager
+        self.cc = config_controller
         self.init_ui()
         self.init_connections()
 
@@ -29,7 +30,7 @@ class MainTab(QtW.QWidget):
 
         # Combobox
         self.cmb_profile = QtW.QComboBox()
-        self.cmb_profile.addItems(self.pm.profiles)
+        self.cmb_profile.addItems(self.pr.list_profiles())
         self.cmb_profile.setCurrentText(self.pm.active_profile)
 
         # Fill layout

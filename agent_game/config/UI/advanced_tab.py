@@ -1,10 +1,12 @@
 import PyQt6.QtWidgets as QtW
 import PyQt6.QtCore as QtC
 
+from agent_game.config.controller import ConfigController
+
 class AdvancedTab(QtW.QWidget):
-    def __init__(self, profile_manager):
+    def __init__(self, config_controller: ConfigController):
         super().__init__()
-        self.pm = profile_manager
+        self.cc = config_controller
         self.init_ui()
         self.init_connections()
 
