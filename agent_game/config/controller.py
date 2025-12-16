@@ -41,3 +41,7 @@ class ConfigController(QtC.QObject):
 
     def save(self):
         self.pr.save_profile(self.active_profile, self.config)
+
+    def available_profiles(self) -> list[str]:
+        return self.pr.list_profiles()
+

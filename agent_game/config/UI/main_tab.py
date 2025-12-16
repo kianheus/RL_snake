@@ -30,8 +30,8 @@ class MainTab(QtW.QWidget):
 
         # Combobox
         self.cmb_profile = QtW.QComboBox()
-        self.cmb_profile.addItems(self.pr.list_profiles())
-        self.cmb_profile.setCurrentText(self.pm.active_profile)
+        self.cmb_profile.addItems(self.cc.available_profiles())
+        self.cmb_profile.setCurrentText(self.cc.active_profile)
 
         # Fill layout
         self.lyt_profile_select = QtW.QHBoxLayout()
