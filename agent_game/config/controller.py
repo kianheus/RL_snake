@@ -7,11 +7,11 @@ from config.model import AgentConfig
 class ConfigController(QtC.QObject):
     config_changed = QtC.pyqtSignal(AgentConfig)
 
-    def __init__(self, profile_manager: ProfileRepository):
+    def __init__(self, profile_repository: ProfileRepository):
         super().__init__()
-        self.pm = profile_manager
-        self.profile = self.pm.startup_profile
-        self.config = self.pm.load_from_profile(self.profile)
+        self.pr = profile_repository
+        self.profile = self.pr.startup_profile
+        self.config = self.pr.load_from_profile(self.profile)
 
 
     def set_agent_type(self, agent_type: str):
