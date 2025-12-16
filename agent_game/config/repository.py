@@ -12,10 +12,7 @@ class ProfileRepository():
     def __init__(self, config_dir):
         self.config_dir = config_dir
         self.cookies = self.load_cookies()
-        self.active_profile = self.cookies["last_active"]
-
-
-
+        self.startup_profile = self.cookies["last_active"]
         self.agent_types = self.cookies["agent_type_options"]
         self.config_data = self.load_from_profile(self.active_profile)
         self.profiles = self.get_profiles_from_dir()

@@ -10,7 +10,7 @@ class ConfigController(QtC.QObject):
     def __init__(self, profile_manager: ProfileRepository):
         super().__init__()
         self.pm = profile_manager
-        self.profile = self.pm.active_profile
+        self.profile = self.pm.startup_profile
         self.config = self.pm.load_from_profile(self.profile)
 
 
