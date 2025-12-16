@@ -36,32 +36,12 @@ class ProfileRepository():
         with open(path, "w") as f:
             json.dump(dict_from_config(config), f, indent=4)   
 
-    def create_profile(self, profile_name):
+    def create_profile(self, profile_name: str, config: AgentConfig):
         path = create_config_filepath(self.config_dir, profile_name)
         if os.path.exists(path):
              raise FileExistsError(profile_name)
-        self.save_profile(profile_name)
-        
-
-        """
-        profile_name = profile_name
-        
-        # Check if any new profile name was entered
-        if not profile_name:
-            return False, "Empty profile name", "Profile name cannot be empty"
-        
-        # Avoid adding duplicate profiles
-        if profile_name in self.profiles:
-            return False, "Profile exists", f"A profile named '{profile_name}' already exists."
-        
-        self.save_profile(profile_name, self.config_data)
-
-        self.profiles.append(profile_name)
-        self.save_profile(profile_name, self.config_data)
-
-
-        return True, "Succesful creation", "Profile created succesfully"
-        """
+        self.save_profile(profile_name, config)
+    
 
     
     def list_profiles(self) -> list[str]:
