@@ -1,9 +1,9 @@
 import PyQt6.QtWidgets as QtW
 import PyQt6.QtCore as QtC
 
-from config.repository import ProfileRepository
-from config.UI.main_tab import MainTab
-from config.UI.advanced_tab import AdvancedTab
+from agent_game.config.repository import ProfileRepository
+from agent_game.config.UI.main_tab import MainTab
+from agent_game.config.UI.advanced_tab import AdvancedTab
 
 class MainWindow(QtW.QMainWindow):
     def __init__(self, config_dir):
@@ -53,7 +53,7 @@ class MainWindow(QtW.QMainWindow):
 
 
 
-config_dir = "agent_game/config"
+config_dir = "agent_game/config/config_files"
 
 
 def run_main_window(config_dir: str):

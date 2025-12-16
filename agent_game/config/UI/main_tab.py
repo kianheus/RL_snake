@@ -5,7 +5,7 @@ import PyQt6.QtGui as QtG
 import json
 import os
 
-from config.repository import ProfileRepository, create_config_filepath 
+from agent_game.config.repository import ProfileRepository, create_config_filepath 
 # TODO: That create_config_filepath import probably shouldn't have to exist
 
 

@@ -1,7 +1,7 @@
 import json
 import os
 
-from config.model import AgentConfig, config_from_dict, dict_from_config
+from agent_game.config.model import AgentConfig, config_from_dict, dict_from_config
 
 def create_config_filepath(config_dir, profile_name: str) -> str:
     filepath = config_dir + "/config_" + profile_name + ".json"
