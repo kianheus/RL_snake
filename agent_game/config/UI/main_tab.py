@@ -228,8 +228,9 @@ class MainTab(QtW.QWidget):
         else:
             self.pm.active_profile = type_string
             profile_filepath = create_config_filepath(self.pm.config_dir, self.pm.active_profile)
-            with open(profile_filepath) as json_file:
-                self.pm.config_data = json.load(json_file)      
+            #with open(profile_filepath) as json_file:
+            #    self.pm.config_data = json.load(json_file)      
+            self.pm.config_data = self.pm.load_from_profile(type_string)
             self.refresh_all()      
             self.hide_add_profile()
             self.load_nn_inputs()
