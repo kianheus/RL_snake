@@ -1,7 +1,7 @@
 import PyQt6.QtCore as QtC
 
-from config.repository import ProfileRepository
-from config.model import AgentConfig, AgentType
+from agent_game.config.repository import ProfileRepository
+from agent_game.config.model import AgentConfig, AgentType
 
 
 class ConfigController(QtC.QObject):
