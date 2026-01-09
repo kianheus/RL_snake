@@ -225,8 +225,18 @@ class MainTab(QtW.QWidget):
         self.cc.config_changed.connect(self.render_config)
 
     def occupance_input_changed(self, size_string):
-        self.cc.config_data.occupance_size = int(size_string) if size_string.isdigit() else 0
+        self.cc.set_occupance(size_string)
 
+    def profile_type_changed(self, text: str):
+
+        if text == "Add new":
+            self.show_add_profile()
+            return
+
+        self.hide_add_profile()
+        self.cc.switch_profile(profile_name=text)
+
+    """
     def profile_type_changed(self, type_string):
         if type_string == "Add new":
             self.show_add_profile()
@@ -237,6 +247,7 @@ class MainTab(QtW.QWidget):
             self.refresh_all()      
             self.hide_add_profile()
             self.load_nn_inputs()
+    """
 
     def handle_profile_creation(self):
         profile_name = self.inp_new_profile.text().strip()
