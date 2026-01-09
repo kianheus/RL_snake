@@ -14,11 +14,6 @@ class ProfileRepository():
         self.cookies = self.load_cookies()
         self.startup_profile = self.cookies["last_active"]
         self.agent_types = self.cookies["agent_type_options"]
-        #self.profiles = self.list_profiles()
-
-        ### No longer in ProfileRepository
-        #self.config_data = self.load_from_profile(self.active_profile)
-        
 
     def load_cookies(self):
         cookies_filepath = self.config_dir + "/cookies.json"
