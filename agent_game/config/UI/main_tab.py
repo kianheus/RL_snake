@@ -221,6 +221,9 @@ class MainTab(QtW.QWidget):
         self.btn_save.clicked.connect(self.save_settings)
         self.btn_save_and_run.clicked.connect(self.save_and_run)
 
+        self.cc.profile_changed.connect(self.render_profile)
+        self.cc.config_changed.connect(self.render_config)
+
     def occupance_input_changed(self, size_string):
         self.cc.config_data.occupance_size = int(size_string) if size_string.isdigit() else 0
 
@@ -443,3 +446,11 @@ class MainTab(QtW.QWidget):
 
     def show_warning_message(self, title, message):
         QtW.QMessageBox.warning(self, title, message)
+
+    def render_profile(self, profile):
+        print("rendering the profile, biip baap")
+        print("Does this exist?", profile)
+
+    def render_config(self, config):
+        print("rendering the config, beep boop")
+        print("Does this variable exist?", config)
