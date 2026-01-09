@@ -222,7 +222,7 @@ class MainTab(QtW.QWidget):
         self.btn_save_and_run.clicked.connect(self.save_and_run)
 
     def occupance_input_changed(self, size_string):
-        self.pm.config_data.occupance_size = int(size_string) if size_string.isdigit() else 0
+        self.cc.config_data.occupance_size = int(size_string) if size_string.isdigit() else 0
 
     def profile_type_changed(self, type_string):
         if type_string == "Add new":
