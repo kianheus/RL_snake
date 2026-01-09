@@ -394,11 +394,11 @@ class MainTab(QtW.QWidget):
     def load_nn_inputs(self):
         while self.inp_nn_layers:
             self.remove_nn_layer()
-        for layer in self.pm.config_data.nn_layers:
+        for layer in self.cc.config.nn_layers:
             if layer != 0:
                 self.create_nn_layer()
         for i, inp_nn_layer in enumerate(self.inp_nn_layers):
-            inp_nn_layer.setText(str(self.pm.config_data.nn_layers[i]))
+            inp_nn_layer.setText(str(self.cc.config.nn_layers[i]))
 
     def update_nn_inputs(self):
 
