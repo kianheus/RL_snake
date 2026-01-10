@@ -218,7 +218,7 @@ class MainTab(QtW.QWidget):
         self.btn_remove_nn_layer.clicked.connect(self.remove_nn_layer_inp)  
 
         self.btn_recover.clicked.connect(self.on_recover_clicked)
-        self.btn_delete_profile.clicked.connect(self.delete_profile)
+        self.btn_delete_profile.clicked.connect(self.on_delete_clicked)
         self.btn_save.clicked.connect(self.save_settings)
         self.btn_save_and_run.clicked.connect(self.save_and_run)
 
@@ -275,32 +275,19 @@ class MainTab(QtW.QWidget):
         self.inp_nn_layers = []
         self.cc.reset_profile()
 
-    #def reset_profile(self):
-    #    with open("agent_game/config/config_recovery.json") as f:
-    #        self.pm.config_data = json.load(f)
-    #
-    #    self.inp_nn_layers = []
-    #    self.load_nn_inputs()
-    #    self.refresh_all()
-
-    def delete_profile(self):
-
-        if self.pm.active_profile == "basic_01" or self.pm.active_profile == "ego_01":
-            self.show_warning_message(title="Invalid remove", message="Cannot remove core profiles.")
-            return
-        
+    def on_delete_clicked(self):
         if self.awaiting_delete_confirmation:
-            self.btn_delete_profile.setText("Delete profile")
-            self.awaiting_delete_confirmation = False
-            self.pm.profiles.remove(self.pm.active_profile)
-            file_path = create_config_filepath(self.pm.config_dir, self.pm.active_profile)
-            os.remove(file_path)
-            self.pm.active_profile = self.pm.profiles[0]
-            self.refresh_all()  
+            self.reset_delete_confirmation()
+            self.cc.delete_profile()
         else:
             self.btn_delete_profile.setText("Confirm delete")
             self.awaiting_delete_confirmation = True
 
+    def reset_delete_confirmation(self):
+            self.btn_delete_profile.setText("Delete profile")
+            self.awaiting_delete_confirmation = False
+
+            
     def save_settings(self):
 
         if self.pm.config_data.agent_type == "Ego":
@@ -443,6 +430,8 @@ class MainTab(QtW.QWidget):
     def render_profile(self, profile):
         print("rendering the profile, biip baap")
         print("Does this exist?", profile)
+        self.reset_delete_confirmation()
+
 
     def render_config(self, config):
         print("rendering the config, beep boop")
@@ -453,6 +442,7 @@ class MainTab(QtW.QWidget):
             self.hide_occupance_input()
 
         self.load_nn_inputs(config.nn_layers)
+        self.reset_delete_confirmation()
         # 
         
         self.refresh_all()

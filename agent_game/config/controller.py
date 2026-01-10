@@ -65,8 +65,12 @@ class ConfigController(QtC.QObject):
                 )
             return
         
+        self.pr.delete_profile(self.active_profile)
         profiles = self.pr.list_profiles()
-        profiles.remove(self.active_profile)
+        self.active_profile = profiles[0]
+        self.config = self.pr.load_from_profile(self.active_profile)
+        self.profile_changed.emit(self.active_profile)
+        self.config_changed.emit(self.config)
         
 
     def save(self):
