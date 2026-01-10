@@ -214,8 +214,8 @@ class MainTab(QtW.QWidget):
 
         self.inp_ego_occupance.textChanged.connect(self.occupance_input_changed)
 
-        self.btn_add_nn_layer.clicked.connect(self.create_nn_layer)  
-        self.btn_remove_nn_layer.clicked.connect(self.remove_nn_layer)  
+        self.btn_add_nn_layer.clicked.connect(self.create_nn_layer_inp)  
+        self.btn_remove_nn_layer.clicked.connect(self.remove_nn_layer_inp)  
 
         self.btn_recover.clicked.connect(self.reset_profile)
         self.btn_delete_profile.clicked.connect(self.delete_profile)
@@ -252,7 +252,7 @@ class MainTab(QtW.QWidget):
     def agent_type_changed(self, type_string):
         self.cc.set_agent_type(agent_type=type_string)
 
-    def create_nn_layer(self):
+    def create_nn_layer_inp(self):
         n_layers = len(self.inp_nn_layers)
 
         inp_nn_layer = QtW.QLineEdit()
@@ -266,7 +266,7 @@ class MainTab(QtW.QWidget):
         self.inp_nn_layers.append(inp_nn_layer)
         self.update_nn_inputs()
 
-    def remove_nn_layer(self):
+    def remove_nn_layer_inp(self):
         removed_widget = self.inp_nn_layers.pop()
         removed_widget.deleteLater()
         self.update_nn_inputs()
