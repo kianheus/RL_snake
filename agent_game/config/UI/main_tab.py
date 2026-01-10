@@ -203,7 +203,7 @@ class MainTab(QtW.QWidget):
         self.refresh_all()
         self.hide_add_profile()
         self.hide_occupance_input()
-        self.load_nn_inputs()
+        self.load_nn_inputs(self.cc.config.nn_layers) #This is illegal
 
     def init_connections(self):
 
@@ -371,14 +371,14 @@ class MainTab(QtW.QWidget):
         for inp_nn_layer in self.inp_nn_layers:
             inp_nn_layer.setEnabled(True)
 
-    def load_nn_inputs(self):
+    def load_nn_inputs(self, nn_layers):
         while self.inp_nn_layers:
-            self.remove_nn_layer()
-        for layer in self.cc.config.nn_layers:
+            self.remove_nn_layer_inp()
+        for layer in nn_layers:
             if layer != 0:
-                self.create_nn_layer()
+                self.create_nn_layer_inp()
         for i, inp_nn_layer in enumerate(self.inp_nn_layers):
-            inp_nn_layer.setText(str(self.cc.config.nn_layers[i]))
+            inp_nn_layer.setText(str(nn_layers[i]))
 
     def update_nn_inputs(self):
 
@@ -452,6 +452,7 @@ class MainTab(QtW.QWidget):
         else:
             self.hide_occupance_input()
 
+        self.load_nn_inputs(config.nn_layers)
         # 
         
         self.refresh_all()
