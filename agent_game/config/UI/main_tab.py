@@ -263,11 +263,7 @@ class MainTab(QtW.QWidget):
 
         
     def agent_type_changed(self, type_string):
-        self.cc.config.agent_type = type_string
-        if type_string == "Ego":
-            self.show_occupance_input()
-        else:
-            self.hide_occupance_input()
+        self.cc.set_agent_type(agent_type=type_string)
 
     def create_nn_layer(self):
         n_layers = len(self.inp_nn_layers)
@@ -421,6 +417,7 @@ class MainTab(QtW.QWidget):
         
 
     def refresh_all(self):
+        #TODO: THIS METHOD NEEDS TO BE REFORMATTED TO render_config()
         profiles = self.cc.available_profiles()
         self.update_nn_inputs()
 
@@ -458,5 +455,10 @@ class MainTab(QtW.QWidget):
 
     def render_config(self, config):
         print("rendering the config, beep boop")
-        print("Does this variable exist?", config)
+        
+        if config.agent_type == "Ego":
+            self.show_occupance_input()
+        else:
+            self.hide_occupance_input()
+        
         self.refresh_all()
