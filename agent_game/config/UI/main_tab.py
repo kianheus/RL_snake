@@ -225,6 +225,9 @@ class MainTab(QtW.QWidget):
         self.cc.profile_changed.connect(self.render_profile)
         self.cc.config_changed.connect(self.render_config)
 
+        self.cc.profile_created.connect(self.on_profile_created)
+        self.cc.error_occurred.connect(self.show_warning_message)
+
     def occupance_input_changed(self, size_string):
         self.cc.set_occupance(size_string)
 

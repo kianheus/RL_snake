@@ -7,6 +7,8 @@ from agent_game.config.model import AgentConfig, AgentType
 class ConfigController(QtC.QObject):
     config_changed = QtC.pyqtSignal(AgentConfig)
     profile_changed = QtC.pyqtSignal(str)
+    profile_created = QtC.pyqtSignal(str)
+    error_occurred = QtC.pyqtSignal(str, str)
 
     def __init__(self, pr: ProfileRepository):
         super().__init__()
