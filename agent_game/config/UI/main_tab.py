@@ -200,6 +200,7 @@ class MainTab(QtW.QWidget):
         self.setLayout(self.lyt_main)
 
         ### Call any methods required at startup
+        self.refresh_all()
         self.hide_add_profile()
         self.hide_occupance_input()
         self.load_nn_inputs()
@@ -437,8 +438,9 @@ class MainTab(QtW.QWidget):
 
         self.cmb_profile.blockSignals(True)
         self.cmb_profile.clear()
-        self.cmb_profile.addItems(self.pm.profiles)
-        self.cmb_profile.setCurrentText(self.pm.active_profile)
+        self.cmb_profile.addItem("Add new")
+        self.cmb_profile.addItems(self.cc.available_profiles())
+        self.cmb_profile.setCurrentText(self.cc.active_profile)
         self.cmb_profile.blockSignals(False)
 
     def update_config_from_ui(self):
@@ -465,3 +467,4 @@ class MainTab(QtW.QWidget):
     def render_config(self, config):
         print("rendering the config, beep boop")
         print("Does this variable exist?", config)
+        self.refresh_all()
