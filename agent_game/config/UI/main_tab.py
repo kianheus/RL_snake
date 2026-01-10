@@ -240,19 +240,6 @@ class MainTab(QtW.QWidget):
         self.hide_add_profile()
         self.cc.switch_profile(profile_name=text)
 
-    """
-    def profile_type_changed(self, type_string):
-        if type_string == "Add new":
-            self.show_add_profile()
-        else:
-            self.pm.active_profile = type_string
-            profile_filepath = create_config_filepath(self.pm.config_dir, self.pm.active_profile)   
-            self.pm.config_data = self.pm.load_from_profile(type_string)
-            self.refresh_all()      
-            self.hide_add_profile()
-            self.load_nn_inputs()
-    """
-
     def handle_profile_creation(self):
         profile_name = self.inp_new_profile.text().strip()
         self.cc.create_profile(profile_name)
@@ -460,5 +447,7 @@ class MainTab(QtW.QWidget):
             self.show_occupance_input()
         else:
             self.hide_occupance_input()
+
+        # 
         
         self.refresh_all()
