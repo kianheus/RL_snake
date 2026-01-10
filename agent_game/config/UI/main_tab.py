@@ -217,7 +217,7 @@ class MainTab(QtW.QWidget):
         self.btn_add_nn_layer.clicked.connect(self.create_nn_layer_inp)  
         self.btn_remove_nn_layer.clicked.connect(self.remove_nn_layer_inp)  
 
-        self.btn_recover.clicked.connect(self.reset_profile)
+        self.btn_recover.clicked.connect(self.on_recover_clicked)
         self.btn_delete_profile.clicked.connect(self.delete_profile)
         self.btn_save.clicked.connect(self.save_settings)
         self.btn_save_and_run.clicked.connect(self.save_and_run)
@@ -271,13 +271,17 @@ class MainTab(QtW.QWidget):
         removed_widget.deleteLater()
         self.update_nn_inputs()
 
-    def reset_profile(self):
-        with open("agent_game/config/config_recovery.json") as f:
-            self.pm.config_data = json.load(f)
-
+    def on_recover_clicked(self):
         self.inp_nn_layers = []
-        self.load_nn_inputs()
-        self.refresh_all()
+        self.cc.reset_profile()
+
+    #def reset_profile(self):
+    #    with open("agent_game/config/config_recovery.json") as f:
+    #        self.pm.config_data = json.load(f)
+    #
+    #    self.inp_nn_layers = []
+    #    self.load_nn_inputs()
+    #    self.refresh_all()
 
     def delete_profile(self):
 
