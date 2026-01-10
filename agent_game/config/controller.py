@@ -8,6 +8,7 @@ class ConfigController(QtC.QObject):
     config_changed = QtC.pyqtSignal(AgentConfig)
     profile_changed = QtC.pyqtSignal(str)
     profile_created = QtC.pyqtSignal(str)
+    profile_deleted = QtC.pyqtSignal(str)
     error_occurred = QtC.pyqtSignal(str, str)
 
     def __init__(self, pr: ProfileRepository):
@@ -55,6 +56,18 @@ class ConfigController(QtC.QObject):
         self.pr.save_profile(profile_name, self.config)
         self.switch_profile(profile_name)
         self.profile_created.emit(profile_name)
+    
+    def delete_profile(self):
+        if self.active_profile in self.pr.core_profiles:
+            self.error_occurred.emit(
+                "Invalid remove", 
+                "Cannot remove core profiles"
+                )
+            return
+        
+        profiles = self.pr.list_profiles()
+        profiles.remove(self.active_profile)
+        
 
     def save(self):
         self.pr.save_profile(self.active_profile, self.config)

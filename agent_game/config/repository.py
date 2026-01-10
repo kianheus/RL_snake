@@ -9,11 +9,15 @@ def create_config_filepath(config_dir, profile_name: str) -> str:
 
 
 class ProfileRepository():
+
+    core_profiles = ["basic_01", "ego_01"]
+
     def __init__(self, config_dir):
         self.config_dir = config_dir
         self.cookies = self.load_cookies()
         self.startup_profile = self.cookies["last_active"]
         self.agent_types = self.cookies["agent_type_options"]
+        
 
     def load_cookies(self):
         cookies_filepath = self.config_dir + "/cookies.json"
@@ -37,6 +41,9 @@ class ProfileRepository():
              raise FileExistsError(profile_name)
         self.save_profile(profile_name, config)
     
+    def delete_profile(self, profile_name: str):
+        path = create_config_filepath(self.config_dir, profile_name)
+        os.remove(path)
 
     
     def list_profiles(self) -> list[str]:
