@@ -63,6 +63,3 @@ class ConfigController(QtC.QObject):
     def set_occupance(self, size_string: int):
         self.config.occupance_size = int(size_string) if size_string.isdigit() else 0
         self.config_changed.emit(self.config)
-
-    def select_profile(self, profile_name):
-        self.active_profile = profile_name
