@@ -64,7 +64,7 @@ def run_main_window(config_dir: str):
     window.show()
     app.exec()
 
-    return window.pm.active_profile, window.pm.config_data
+    return window.cc.active_profile, window.cc.config
 
 if __name__ == "__main__":
     run_main_window(config_dir=config_dir)

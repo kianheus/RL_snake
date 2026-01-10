@@ -270,7 +270,7 @@ class MainTab(QtW.QWidget):
         self.inp_new_profile.clear()
 
     def agent_type_changed(self, type_string):
-        self.pm.config_data.agent_type = type_string
+        self.cc.config.agent_type = type_string
         if type_string == "Ego":
             self.show_occupance_input()
         else:
@@ -428,11 +428,11 @@ class MainTab(QtW.QWidget):
         
 
     def refresh_all(self):
-        profiles = self.pm.list_profiles()
+        profiles = self.cc.available_profiles()
         self.update_nn_inputs()
 
         #self.cmb_agent_type.blockSignals(True)
-        self.cmb_agent_type.setCurrentText(self.pm.config_data.agent_type)
+        self.cmb_agent_type.setCurrentText(self.cc.config.agent_type)
         #self.cmb_agent_type.blockSignals(False)
 
         self.cmb_profile.blockSignals(True)
