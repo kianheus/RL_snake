@@ -255,24 +255,13 @@ class MainTab(QtW.QWidget):
 
     def handle_profile_creation(self):
         profile_name = self.inp_new_profile.text().strip()
-        ok, title, msg = self.pm.create_profile(profile_name)
-
-        if not ok:
-            self.show_warning_message("Profile error", title, msg)
-            return
-
-        self.update_config_from_ui()
-
-        self.cmb_profile.blockSignals(True)
-        self.cmb_profile.clear()
-        self.cmb_profile.addItems(self.pm.profiles)
-        self.cmb_profile.setCurrentText(profile_name) # TODO: Consider whether this should be in the refresh_all() function
-        self.cmb_profile.blockSignals(False)
-        
-        # Clear input box
+        self.cc.create_profile(profile_name)
+            
+    def on_profile_created(self, profile_name: str):
         self.hide_add_profile()
         self.inp_new_profile.clear()
 
+        
     def agent_type_changed(self, type_string):
         self.cc.config.agent_type = type_string
         if type_string == "Ego":

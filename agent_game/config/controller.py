@@ -32,14 +32,24 @@ class ConfigController(QtC.QObject):
     def create_profile(self, profile_name: str):
         # Check if any new profile name was entered
         if not profile_name:
-            raise ValueError("Profile name cannot be empty.")
+            self.error_occurred.emit(
+                "Profile creation error", 
+                "Profile name cannot be empty."
+                )
+            return
         
         # Avoid adding duplicate profiles
         if profile_name in self.pr.list_profiles():
-            raise ValueError(f"A profile named '{profile_name}' already exists.")
+            self.error_occurred.emit(
+                "Profile creation error", 
+                f"A profile named '{profile_name}' already exists."
+                )
+            return
         
+        # Save new profile to .json, switch and emit
         self.pr.save_profile(profile_name, self.config)
         self.switch_profile(profile_name)
+        self.profile_created.emit(profile_name)
 
     def save(self):
         self.pr.save_profile(self.active_profile, self.config)
