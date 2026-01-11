@@ -73,7 +73,34 @@ class ConfigController(QtC.QObject):
         self.config_changed.emit(self.config)
         
 
-    def save(self):
+    def save_settings(self, nn_layers: list[str]):
+
+        if self.config.agent_type == AgentType.EGO:
+            if self.config.occupance_size % 2 == 0:
+                self.error_occurred.emit(
+                    "Save cancelled",
+                    "Occupance size must be an odd number."
+                )
+                return
+        else:
+            self.config.occupance_size = 0
+        
+        for i, layer in enumerate(nn_layers):
+            if not layer:
+                self.error_occurred.emit(
+                    "Save cancelled",
+                    "Empty network layer."
+                )
+                return
+            value = int(layer)
+            if value > 1024:
+                self.error_occurred.emit(
+                    "Save cancelled",
+                    f"nn layer {i+1} too large."
+                )
+                return
+            self.config.nn_layers[i] = value
+        
         self.pr.save_profile(self.active_profile, self.config)
 
     def available_profiles(self) -> list[str]:

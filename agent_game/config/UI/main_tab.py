@@ -219,7 +219,7 @@ class MainTab(QtW.QWidget):
 
         self.btn_recover.clicked.connect(self.on_recover_clicked)
         self.btn_delete_profile.clicked.connect(self.on_delete_clicked)
-        self.btn_save.clicked.connect(self.save_settings)
+        self.btn_save.clicked.connect(self.on_save_clicked)
         self.btn_save_and_run.clicked.connect(self.save_and_run)
 
         self.cc.profile_changed.connect(self.render_profile)
@@ -247,7 +247,6 @@ class MainTab(QtW.QWidget):
     def on_profile_created(self, profile_name: str):
         self.hide_add_profile()
         self.inp_new_profile.clear()
-
         
     def agent_type_changed(self, type_string):
         self.cc.set_agent_type(agent_type=type_string)
@@ -287,31 +286,11 @@ class MainTab(QtW.QWidget):
             self.btn_delete_profile.setText("Delete profile")
             self.awaiting_delete_confirmation = False
 
-            
-    def save_settings(self):
-
-        if self.pm.config_data.agent_type == "Ego":
-            if self.pm.config_data.occupance_size % 2 == 0:
-                self.show_warning_message(title="Even occupance size", message="Occupance size must be an odd number")
-                return
-        else:
-            self.pm.config_data.occupance_size = 0
-
-        # Check if all nn layer inputs are valid
-        for i, inp_nn_layer in enumerate(self.inp_nn_layers):
-            if not inp_nn_layer.text():
-                if len(self.inp_nn_layers) == 1:
-                    self.show_warning_message(title="Invalid nn layer", message="Network needs at least one layer, save cancelled")    
-                else:
-                    self.show_warning_message(title="Invalid nn layer", message="Empty nn layer, save cancelled")
-                return
-            value = int(inp_nn_layer.text())
-            if value > 1024:
-                self.show_warning_message(title="Invalid nn layer", message="nn layer " + str(i+1) + " too large, save cancelled")
-                return
-            self.pm.config_data.nn_layers[i] = value
-
-        self.pm.save_profile(self.pm.active_profile, self.pm.config_data)
+    def on_save_clicked(self):
+        nn_layers_text = []
+        for inp in self.inp_nn_layers:
+            nn_layers_text.append(inp.text())
+        self.cc.save_settings(nn_layers=nn_layers_text)
 
     def save_and_run(self):
         self.save_settings()
