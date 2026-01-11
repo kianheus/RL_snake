@@ -292,9 +292,10 @@ class MainTab(QtW.QWidget):
             nn_layers_text.append(inp.text())
         self.cc.save_settings(nn_layers=nn_layers_text)
 
-    def save_and_run(self):
-        self.save_settings()
+    def on_save_and_run_clicked(self):
+        self.on_save_clicked()
         self.window().close()
+        #TODO: Link this to code execution
 
     def show_add_profile(self):
         self.inp_new_profile.show()
