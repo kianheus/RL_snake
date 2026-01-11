@@ -263,7 +263,7 @@ class MainTab(QtW.QWidget):
         inp_nn_layer.setValidator(nn_validator)  
 
         self.inp_nn_layers.append(inp_nn_layer)
-        self.update_nn_inputs()
+        self.update_nn_inputs() 
 
     def remove_nn_layer_inp(self):
         removed_widget = self.inp_nn_layers.pop()
@@ -389,20 +389,6 @@ class MainTab(QtW.QWidget):
         self.cmb_profile.addItems(self.cc.available_profiles())
         self.cmb_profile.setCurrentText(self.cc.active_profile)
         self.cmb_profile.blockSignals(False)
-
-    def update_config_from_ui(self):
-        # Copy agent type
-        self.pm.config_data.agent_type = self.cmb_agent_type.currentText()
-
-        # Copy NN layers from the QLineEdits
-        nn_layers = []
-        for inp_nn_layer in self.inp_nn_layers:
-            text = inp_nn_layer.text()
-            if text:
-                nn_layers.append(int(text))
-            else:
-                nn_layers.append(0)
-        self.pm.config_data.nn_layers = nn_layers
 
     def show_warning_message(self, title, message):
         QtW.QMessageBox.warning(self, title, message)
