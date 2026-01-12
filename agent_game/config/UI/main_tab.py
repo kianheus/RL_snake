@@ -203,7 +203,7 @@ class MainTab(QtW.QWidget):
         self.refresh_all()
         self.hide_add_profile()
         self.hide_occupance_input()
-        self.load_nn_inputs(self.cc.config.nn_layers) #This is illegal
+        self.cc.emit_inital_state()
 
     def init_connections(self):
 
@@ -220,7 +220,7 @@ class MainTab(QtW.QWidget):
         self.btn_recover.clicked.connect(self.on_recover_clicked)
         self.btn_delete_profile.clicked.connect(self.on_delete_clicked)
         self.btn_save.clicked.connect(self.on_save_clicked)
-        self.btn_save_and_run.clicked.connect(self.save_and_run)
+        self.btn_save_and_run.clicked.connect(self.on_save_and_run_clicked)
 
         self.cc.profile_changed.connect(self.render_profile)
         self.cc.config_changed.connect(self.render_config)

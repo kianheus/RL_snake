@@ -110,5 +110,9 @@ class ConfigController(QtC.QObject):
         return [a.value for a in AgentType]
     
     def set_occupance(self, size_string: int):
-        self.config.occupance_size = int(size_string) if size_string.isdigit() else 0
+        self.config.occupance_size = size_string if size_string.isdigit() else 0
         self.config_changed.emit(self.config)
+
+    def emit_inital_state(self):
+        self.config_changed.emit(self.config)
+        self.profile_changed.emit(self.active_profile)
