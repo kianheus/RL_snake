@@ -8,8 +8,8 @@ from collections import deque
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 #warnings.filterwarnings("ignore")
 
-import agent_types
-from game_logic import Game
+import agent_game.agent_types as agent_types
+from agent_game.game_logic import Game
 
 
 class Agent():

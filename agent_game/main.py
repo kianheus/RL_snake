@@ -1,19 +1,12 @@
 """
 Main file to run RL snake simulations
 """
-
-
-from config.UI.main_window import run_main_window
+from agent_game.config.UI.main_window import run_main_window
 
 config_dir = "agent_game/config/config_files"
 active_profile, config_data = run_main_window(config_dir)
 
 import pygame
-from agent_constructor import Agent
-from game_logic import Game
-from plotter import plot
-
-
 agent_type = config_data.agent_type
 NN_layers = [layer for layer in config_data.nn_layers if layer != 0]
 occupance_size = config_data.occupance_size
@@ -31,6 +24,9 @@ gamma = config_data.gamma
 occupance_size = 7
 
 
+from agent_game.agent_constructor import Agent
+from agent_game.game_logic import Game
+from agent_game.plotter import plot
 
 
 

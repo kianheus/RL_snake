@@ -2,7 +2,7 @@ import pygame
 import numpy as np
 import time
 from typing import List
-from connectivity_checker import check_reachable
+from agent_game.connectivity_checker import check_reachable
 
 colorGreen = (173, 204, 96)
 colorDarkGreen = (43, 51, 24)

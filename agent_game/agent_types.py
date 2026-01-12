@@ -15,9 +15,9 @@ class directions():
         self.WEST = np.array([-1, 0])        
 
 
-from model import Linear_QNet, QTrainer
+from agent_game.model import Linear_QNet, QTrainer
 
-from game_logic import Game, cell_count
+from agent_game.game_logic import Game, cell_count
 
 
 class BasicAgent():
