@@ -2,16 +2,8 @@ import PyQt6.QtWidgets as QtW
 import PyQt6.QtCore as QtC
 import PyQt6.QtGui as QtG
 
-# We shouldn't be needing these
-#import json
-#import os
 
 from agent_game.config.controller import ConfigController
-#from agent_game.config.repository import ProfileRepository, create_config_filepath 
-# TODO: That create_config_filepath import probably shouldn't have to exist
-
-
-
 
 class MainTab(QtW.QWidget):
     def __init__(self, config_controller: ConfigController):
@@ -201,7 +193,6 @@ class MainTab(QtW.QWidget):
         self.setLayout(self.lyt_main)
 
         ### Call any methods required at startup
-        self.refresh_all()
         self.hide_add_profile()
         self.hide_occupance_input()
 
@@ -224,8 +215,6 @@ class MainTab(QtW.QWidget):
 
         self.cc.profile_changed.connect(self.render_profile)
         self.cc.config_changed.connect(self.render_config)
-
-        self.cc.profile_created.connect(self.on_profile_created)
         self.cc.error_occurred.connect(self.show_warning_message)
 
     def occupance_input_changed(self, size_string):
@@ -242,6 +231,7 @@ class MainTab(QtW.QWidget):
 
     def handle_profile_creation(self):
         profile_name = self.inp_new_profile.text().strip()
+        self.hide_add_profile()
         self.cc.create_profile(profile_name)
             
     def on_profile_created(self, profile_name: str):
@@ -372,36 +362,21 @@ class MainTab(QtW.QWidget):
             widget = item.widget()
             if widget is not None:
                 layout.removeWidget(widget)
-        
-
-    def refresh_all(self):
-        #TODO: THIS METHOD NEEDS TO BE REFORMATTED TO render_config()
-        profiles = self.cc.available_profiles()
-        self.update_nn_inputs()
-
-        #self.cmb_agent_type.blockSignals(True)
-        self.cmb_agent_type.setCurrentText(self.cc.config.agent_type)
-        #self.cmb_agent_type.blockSignals(False)
-
-        self.cmb_profile.blockSignals(True)
-        self.cmb_profile.clear()
-        self.cmb_profile.addItem("Add new")
-        self.cmb_profile.addItems(self.cc.available_profiles())
-        self.cmb_profile.setCurrentText(self.cc.active_profile)
-        self.cmb_profile.blockSignals(False)
 
     def show_warning_message(self, title, message):
         QtW.QMessageBox.warning(self, title, message)
 
-    def render_profile(self, profile):
-        print("rendering the profile, biip baap")
-        print("Does this exist?", profile)
-        self.reset_delete_confirmation()
+    def render_profile(self, active_profile):
+        profiles = self.cc.available_profiles()
 
+        self.cmb_profile.blockSignals(True)
+        self.cmb_profile.clear()
+        self.cmb_profile.addItem("Add new")
+        self.cmb_profile.addItems(profiles)
+        self.cmb_profile.setCurrentText(active_profile)
+        self.cmb_profile.blockSignals(False)
 
     def render_config(self, config):
-        print("rendering the config, beep boop")
-        
         if config.agent_type == "Ego":
             self.show_occupance_input()
         else:
@@ -409,6 +384,7 @@ class MainTab(QtW.QWidget):
 
         self.load_nn_inputs(config.nn_layers)
         self.reset_delete_confirmation()
-        # 
         
-        self.refresh_all()
+        self.update_nn_inputs()
+
+        self.cmb_agent_type.setCurrentText(config.agent_type)
