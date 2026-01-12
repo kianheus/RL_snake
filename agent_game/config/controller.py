@@ -7,8 +7,6 @@ from agent_game.config.model import AgentConfig, AgentType
 class ConfigController(QtC.QObject):
     config_changed = QtC.pyqtSignal(AgentConfig)
     profile_changed = QtC.pyqtSignal(str)
-    profile_created = QtC.pyqtSignal(str)
-    profile_deleted = QtC.pyqtSignal(str)
     error_occurred = QtC.pyqtSignal(str, str)
 
     def __init__(self, pr: ProfileRepository):
@@ -22,18 +20,16 @@ class ConfigController(QtC.QObject):
         self.config.agent_type = agent_type
         if agent_type != "Ego":
             self.config.occupance_size = 0
-        self.config_changed.emit(self.config)
+        self.emit_config_change()
 
     def switch_profile(self, profile_name: str):
         self.active_profile = profile_name
         self.config = self.pr.load_from_profile(profile_name)
-        self.profile_changed.emit(profile_name)
-        self.config_changed.emit(self.config)
+        self.emit_profile_change()
 
     def reset_profile(self):
         self.config = self.pr.load_from_profile("recovery")
-        self.profile_changed.emit(self.active_profile)
-        self.config_changed.emit(self.config)
+        self.emit_profile_change()
     
     def create_profile(self, profile_name: str):
         # Check if any new profile name was entered
@@ -55,7 +51,6 @@ class ConfigController(QtC.QObject):
         # Save new profile to .json, switch and emit
         self.pr.save_profile(profile_name, self.config)
         self.switch_profile(profile_name)
-        self.profile_created.emit(profile_name)
     
     def delete_profile(self):
         if self.active_profile in self.pr.core_profiles:
@@ -69,8 +64,7 @@ class ConfigController(QtC.QObject):
         profiles = self.pr.list_profiles()
         self.active_profile = profiles[0]
         self.config = self.pr.load_from_profile(self.active_profile)
-        self.profile_changed.emit(self.active_profile)
-        self.config_changed.emit(self.config)
+        self.emit_profile_change()
         
 
     def save_settings(self, nn_layers: list[str]):
@@ -111,15 +105,22 @@ class ConfigController(QtC.QObject):
     
     def set_occupance(self, size_string: int):
         self.config.occupance_size = size_string if size_string.isdigit() else 0
-        self.config_changed.emit(self.config)
+        self.emit_config_change()
 
     def set_config_variable(self, config_key, value):
         if hasattr(self.config, config_key):
             setattr(self.config, config_key, value)
             self.config_changed.emit(self.config)
             print(f"updated config {config_key} to {value}")
-            print(self.config)
+        else: 
+            raise KeyError(f"Unrecognized config key {config_key}.")
 
     def emit_inital_state(self):
-        self.config_changed.emit(self.config)
+        self.emit_profile_change()
+
+    def emit_profile_change(self):
         self.profile_changed.emit(self.active_profile)
+        self.config_changed.emit(self.config)
+    
+    def emit_config_change(self):
+        self.config_changed.emit(self.config)

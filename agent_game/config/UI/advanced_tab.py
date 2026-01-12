@@ -155,7 +155,6 @@ class AdvancedTab(QtW.QWidget):
         pass
 
     def on_config_changed(self, config: AgentConfig):
-        print("This happens")
         self.inp_lr.setPlaceholderText(str(config.lr))
         self.inp_gamma.setPlaceholderText(str(config.gamma))
         self.inp_batch_size.setPlaceholderText(str(config.batch_size))
