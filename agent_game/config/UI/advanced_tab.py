@@ -3,6 +3,7 @@ import PyQt6.QtCore as QtC
 import PyQt6.QtGui as QtG
 
 from agent_game.config.controller import ConfigController
+from agent_game.config.model import AgentType, AgentConfig
 
 class AdvancedTab(QtW.QWidget):
     def __init__(self, config_controller: ConfigController):
@@ -10,6 +11,7 @@ class AdvancedTab(QtW.QWidget):
         self.cc = config_controller
         self.init_ui()
         self.init_connections()
+        self.cc.emit_inital_state()
 
     def init_ui(self):
 
@@ -105,6 +107,7 @@ class AdvancedTab(QtW.QWidget):
         self.lyt_main.setContentsMargins(20, 20, 20, 20)
         self.lyt_main.setSpacing(0)
 
+
     def init_connections(self):
         self.inp_lr.editingFinished.connect(
             lambda: self.validate_numerical(config_key="lr", 
@@ -131,6 +134,9 @@ class AdvancedTab(QtW.QWidget):
                                             max_allowable=100000)
             )
 
+        self.cc.profile_changed.connect(self.on_profile_changed)
+        self.cc.config_changed.connect(self.on_config_changed)
+
     def validate_numerical(self, config_key, widget, min_allowable, max_allowable):
         inp_text = widget.text()
         if inp_text:
@@ -145,4 +151,12 @@ class AdvancedTab(QtW.QWidget):
             self.cc.set_config_variable(config_key=config_key, value=clamped_value)
 
 
+    def on_profile_changed(self, active_profile):
+        pass
 
+    def on_config_changed(self, config: AgentConfig):
+        print("This happens")
+        self.inp_lr.setPlaceholderText(str(config.lr))
+        self.inp_gamma.setPlaceholderText(str(config.gamma))
+        self.inp_batch_size.setPlaceholderText(str(config.batch_size))
+        self.inp_max_memory.setPlaceholderText(str(config.max_memory))

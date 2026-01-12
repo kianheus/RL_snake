@@ -19,6 +19,7 @@ class MainTab(QtW.QWidget):
         self.cc = config_controller
         self.init_ui()
         self.init_connections()
+        self.cc.emit_inital_state()
 
     def init_ui(self):
 
@@ -203,7 +204,6 @@ class MainTab(QtW.QWidget):
         self.refresh_all()
         self.hide_add_profile()
         self.hide_occupance_input()
-        self.cc.emit_inital_state()
 
     def init_connections(self):
 
