@@ -106,4 +106,43 @@ class AdvancedTab(QtW.QWidget):
         self.lyt_main.setSpacing(0)
 
     def init_connections(self):
-        pass
+        self.inp_lr.editingFinished.connect(
+            lambda: self.validate_numerical(config_key="lr", 
+                                            widget=self.inp_lr, 
+                                            min_allowable=0., 
+                                            max_allowable=1.)
+            )
+        self.inp_gamma.editingFinished.connect(
+            lambda: self.validate_numerical(config_key="gamma",
+                                            widget=self.inp_gamma, 
+                                            min_allowable=0., 
+                                            max_allowable=1.)
+            )
+        self.inp_batch_size.editingFinished.connect(
+            lambda: self.validate_numerical(config_key="batch_size",
+                                            widget=self.inp_batch_size, 
+                                            min_allowable=100, 
+                                            max_allowable=10000)
+            )
+        self.inp_max_memory.editingFinished.connect(
+            lambda: self.validate_numerical(config_key="max_memory",
+                                            widget=self.inp_max_memory, 
+                                            min_allowable=1000, 
+                                            max_allowable=100000)
+            )
+
+    def validate_numerical(self, config_key, widget, min_allowable, max_allowable):
+        inp_text = widget.text()
+        if inp_text:
+            if isinstance(min_allowable, int):
+                inp_val = int(inp_text)
+            elif isinstance(min_allowable, float):
+                inp_val = float(inp_text)
+            else:
+                raise TypeError(f"Invalid min/max type for regex on {widget}.")
+            clamped_value = min(max(inp_val, min_allowable), max_allowable)
+            widget.setText(str(clamped_value))
+            self.cc.set_config_variable(config_key=config_key, value=clamped_value)
+
+
+

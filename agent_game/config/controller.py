@@ -113,6 +113,13 @@ class ConfigController(QtC.QObject):
         self.config.occupance_size = size_string if size_string.isdigit() else 0
         self.config_changed.emit(self.config)
 
+    def set_config_variable(self, config_key, value):
+        if hasattr(self.config, config_key):
+            setattr(self.config, config_key, value)
+            self.config_changed.emit(self.config)
+            print(f"updated config {config_key} to {value}")
+            print(self.config)
+
     def emit_inital_state(self):
         self.config_changed.emit(self.config)
         self.profile_changed.emit(self.active_profile)
