@@ -4,31 +4,21 @@ Main file to run RL snake simulations
 from agent_game.config.UI.main_window import run_main_window
 
 config_dir = "agent_game/config/config_files"
-active_profile, config_data = run_main_window(config_dir)
+run_sim, active_profile, config = run_main_window(config_dir)
 
 import pygame
-agent_type = config_data.agent_type
-NN_layers = [layer for layer in config_data.nn_layers if layer != 0]
-occupance_size = config_data.occupance_size
-
-MAX_MEMORY = config_data.max_memory
-BATCH_SIZE = config_data.batch_size
-LR = config_data.lr
-gamma = config_data.gamma
-
-
-
-
-
-### If you are using an ego-agent, change these variables:
-occupance_size = 7
-
-
 from agent_game.agent_constructor import Agent
 from agent_game.game_logic import Game
 from agent_game.plotter import plot
 
+agent_type = config.agent_type
+NN_layers = [layer for layer in config.nn_layers if layer != 0]
+occupance_size = config.occupance_size
 
+MAX_MEMORY = config.max_memory
+BATCH_SIZE = config.batch_size
+LR = config.lr
+gamma = config.gamma
 
 def train():
 

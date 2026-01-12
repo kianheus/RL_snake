@@ -64,7 +64,11 @@ def run_main_window(config_dir: str):
     window.show()
     app.exec()
 
-    return window.cc.active_profile, window.cc.config
+    run_sim = window.cc.run_sim
+    active_profile = window.cc.active_profile
+    config = window.cc.config
+
+    return run_sim, active_profile, config
 
 if __name__ == "__main__":
     run_main_window(config_dir=config_dir)

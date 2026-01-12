@@ -284,8 +284,9 @@ class MainTab(QtW.QWidget):
 
     def on_save_and_run_clicked(self):
         self.on_save_clicked()
+        self.cc.run_sim = True
         self.window().close()
-        #TODO: Link this to code execution
+        
 
     def show_add_profile(self):
         self.inp_new_profile.show()

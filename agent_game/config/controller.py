@@ -12,8 +12,11 @@ class ConfigController(QtC.QObject):
     def __init__(self, pr: ProfileRepository):
         super().__init__()
         self.pr = pr
+
         self.active_profile = self.pr.startup_profile
         self.config = self.pr.load_from_profile(self.active_profile)
+        
+        self.run_sim = False
 
 
     def set_agent_type(self, agent_type: str):
