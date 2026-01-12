@@ -1,5 +1,6 @@
 import PyQt6.QtWidgets as QtW
 import PyQt6.QtCore as QtC
+import PyQt6.QtGui as QtG
 
 from agent_game.config.controller import ConfigController
 
@@ -12,6 +13,13 @@ class AdvancedTab(QtW.QWidget):
 
     def init_ui(self):
 
+        # Validator to ensure numerical inputs
+        regex = QtC.QRegularExpression("^[0-9]*\\.?[0-9]+$")
+        regex_validator = QtG.QRegularExpressionValidator(regex)
+
+        regex_int = QtC.QRegularExpression("^[0-9]+$")
+        regex_validator_int = QtG.QRegularExpressionValidator(regex_int)
+
         ### LR input
         
         # Text description
@@ -21,6 +29,7 @@ class AdvancedTab(QtW.QWidget):
         self.inp_lr = QtW.QLineEdit()
         self.inp_lr.setPlaceholderText("0.001")
         self.inp_lr.setFixedWidth(100)
+        self.inp_lr.setValidator(regex_validator)
 
         # Add items to layout
         self.lyt_lr = QtW.QHBoxLayout()
@@ -37,6 +46,7 @@ class AdvancedTab(QtW.QWidget):
         self.inp_gamma = QtW.QLineEdit()
         self.inp_gamma.setPlaceholderText("0.9")
         self.inp_gamma.setFixedWidth(100)
+        self.inp_gamma.setValidator(regex_validator)
 
         # Add items to layout
         self.lyt_gamma = QtW.QHBoxLayout()
@@ -53,6 +63,7 @@ class AdvancedTab(QtW.QWidget):
         self.inp_batch_size = QtW.QLineEdit()
         self.inp_batch_size.setPlaceholderText("1000")
         self.inp_batch_size.setFixedWidth(100)
+        self.inp_batch_size.setValidator(regex_validator_int)
 
         # Add items to layout
         self.lyt_batch_size = QtW.QHBoxLayout()
@@ -70,6 +81,7 @@ class AdvancedTab(QtW.QWidget):
         self.inp_max_memory = QtW.QLineEdit()
         self.inp_max_memory.setPlaceholderText("10000")
         self.inp_max_memory.setFixedWidth(100)
+        self.inp_max_memory.setValidator(regex_validator_int)
 
         # Add items to layout
         self.lyt_max_memory = QtW.QHBoxLayout()
