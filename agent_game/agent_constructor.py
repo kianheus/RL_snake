@@ -10,6 +10,7 @@ device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
 import agent_game.agent_types as agent_types
 from agent_game.game_logic import Game
+from agent_game.config.model import AgentType
 
 
 class Agent():
@@ -73,11 +74,11 @@ class Agent():
         BATCH_SIZE = kwargs.get("BATCH_SIZE")
         MAX_MEMORY = kwargs.get("MAX_MEMORY")
 
-        if agent_type == "basic":
+        if agent_type == AgentType.BASIC:
             net = agent_types.BasicAgent(NN_layers=kwargs["NN_layers"], 
                                          LR=kwargs["LR"],
                                          gamma=kwargs["gamma"])
-        elif agent_type == "ego":
+        elif agent_type == AgentType.EGO:
             net = agent_types.EgoAgent(NN_layers=kwargs["NN_layers"],
                                        occupance_size=kwargs["occupance_size"],
                                        LR=kwargs["LR"],
