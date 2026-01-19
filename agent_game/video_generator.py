@@ -17,6 +17,8 @@ frames_data = [
         [(4, 2), (4, 1), (3, 1)]
 ]
 
+food_data = [(7, 7), (7, 7)]
+
 
 fig, ax = plt.subplots()
 
@@ -31,6 +33,9 @@ ax.add_patch(background)
 max_snake_len = max(len(frame) for frame in frames_data)
 body_patches = []
 
+food_rect = patches.Rectangle((0, 0), cell_size, cell_size, facecolor="r", zorder = 1)
+ax.add_patch(food_rect)
+
 for _ in range(max_snake_len):
     rect = patches.Rectangle((0, 0), cell_size, cell_size, facecolor=colorDarkGreen, zorder = 1)
     rect.set_visible(False)
@@ -38,8 +43,9 @@ for _ in range(max_snake_len):
     body_patches.append(rect)
 
 
-def update_body(frame_idx):
+def update(frame_idx):
     body_coords = frames_data[frame_idx]
+    food_coord = food_data[frame_idx]
 
     for i, rect in enumerate(body_patches):
         if i < len(body_coords):
@@ -49,12 +55,17 @@ def update_body(frame_idx):
         else:
             rect.set_visible(False)
 
+    food_rect.set_xy((food_coord[0] * cell_size, food_coord[1] * cell_size))
+    
+    # Careful here, only a shallow list copy
+    all_patches = body_patches + [food_rect]
 
-    return body_patches
+    return all_patches
+
 
 anim = FuncAnimation(
     fig,
-    update_body,
+    update,
     frames=len(frames_data),
     interval=200,
     blit=True
