@@ -27,15 +27,6 @@ DIRECTIONS = [
     WEST
 ]
 
-pygame.init()
-
-screen = pygame.display.set_mode((window_size, window_size))
-pygame.display.set_caption("Snake Game")
-
-
-lastUpdateTime = time.time()
-
-
 
 def elementInList(element: np.ndarray, list: List[np.ndarray]) -> bool:
 
@@ -65,7 +56,7 @@ class Snake():
         self.Reset()
 
     
-    def Draw(self):
+    def Draw(self, screen):
         for item in self.body:
             x = item[0]
             y = item[1]
@@ -117,7 +108,7 @@ class Food():
         self.position = self.GenerateRandomPos(snakeBody)
 
 
-    def Draw(self):
+    def Draw(self, screen):
         screen.blit(self.image, (self.position*cell_size, self.position*cell_size))
 
     def GenerateRandomCell(self) -> np.ndarray:
@@ -135,6 +126,10 @@ class Food():
 class Game():
 
     def __init__(self, control_type, check_connected=False):
+        pygame.init()
+        self.screen = pygame.display.set_mode((window_size, window_size))
+        pygame.display.set_caption("Snake Game")
+
         self.snake = Snake()
         self.food = Food(self.snake.body)
         self.frame_iteration = 0
@@ -142,8 +137,6 @@ class Game():
         self.done = False
         self.control_type = control_type
         self.check_connected = check_connected
-        
-        
 
     def Reset(self):
         self.snake.Reset()
@@ -154,14 +147,14 @@ class Game():
 
 
     def Draw(self):
-        self.food.Draw()
-        self.snake.Draw()
+        self.food.Draw(self.screen)
+        self.snake.Draw(self.screen)
     
     def Step(self, action):
         self.frame_iteration += 1
         self.reward = 0
 
-        screen.fill(colorGreen)
+        self.screen.fill(colorGreen)
         self.Draw()
         pygame.display.flip()
 
@@ -238,12 +231,17 @@ class Game():
 
 
 if __name__ == "__main__":
+
+
+
+
+
     
     game = Game()
 
     action = STRAIGHT
 
-    screen.fill(colorGreen)
+    game.screen.fill(colorGreen)
     game.snake.Draw()
     game.food.Draw()
 
@@ -274,7 +272,7 @@ if __name__ == "__main__":
 
                 print("reward:", reward, ", done:", done, ", score:", score)
 
-                screen.fill(colorGreen)
+                game.screen.fill(colorGreen)
                 game.snake.Draw()
                 game.food.Draw()
 
