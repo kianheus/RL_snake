@@ -1,14 +1,9 @@
-1. Rewrite config code into 3 main components: UI, ConfigController and ProfileManager
-    a. The UI handles:
-        1. Enabling/disabling buttons
-        2. Sending intent
-        3. Rendering state
-        4. Displaying errors
-    b. The ConfigController handles:
-        1. Checking valid field inputs
-        2. Configuration consistency
-        3. Owning the active config
-    c. The ProfileManager handles: (Should be renamed to ProfileRepository)
-        1. Disk loading and saving
-        2. Filepaths
-        3. Formats
+1. Simulation and visualization upgrades:
+	a. We want to log and visualize the best performance of a network
+	b. Simulator should keep track of full state of current simulation, and log it if it is the best score
+	c. Upon closing the program, the user should be prompted if he wants to save the training results.
+	d. If yes: the visualizer should rerun the best sim to save as .gif, and plot of the total
+	   training process.
+	e. In total, a saved training folder should contain: the model parameters, model nn weights and biases, video of 
+	best run, and plot of training.
+2. Try to create the online popular 8-directional feature representation as profile type.
