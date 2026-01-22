@@ -10,6 +10,7 @@ import pygame
 from agent_game.agent_constructor import Agent
 from agent_game.game_logic import Game
 from agent_game.plotter import plot
+from agent_game.video_generator import Animator
 
 agent_type = config.agent_type
 NN_layers = [layer for layer in config.nn_layers if layer != 0]
@@ -43,7 +44,7 @@ def train():
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
-                return record
+                return game, record
 
         # Get old state
         state_old = agent.get_state(game)
@@ -90,6 +91,16 @@ def train():
             plot_mean_scores.append(mean_score)
             plot(plot_scores, plot_mean_scores)
 
+    return game, record
+
 
 if run_sim:
-    record = train()
+    game, record = train()
+
+    print("hi!!!")
+
+
+    animator = Animator(game.best_body_data, game.best_food_data)
+    animator.make_animation()
+
+    
