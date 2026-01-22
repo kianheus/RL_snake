@@ -1,6 +1,8 @@
 import matplotlib.pyplot as plt
 import matplotlib.patches as patches
 from matplotlib.animation import FuncAnimation, FFMpegWriter
+import matplotlib.image as mpimg
+import os
 
 
 # TODO: Make these variables imported from game_logic.py
@@ -11,67 +13,107 @@ cell_size = 30
 cell_count = 20
 window_size = cell_size * cell_count
 
+class Animator():
 
-frames_data = [
-        [(4, 1), (3, 1), (2, 1)], 
-        [(4, 2), (4, 1), (3, 1)]
-]
+    def __init__(self, body_data, food_data, target_px=1200, dpi=200):
+        self.body_data = body_data
+        self.food_data = food_data
+        self.dpi = dpi
 
-food_data = [(7, 7), (7, 7)]
+        
 
+        fig_size_in = target_px / dpi  # inches
 
-fig, ax = plt.subplots()
+        self.fig, self.ax = plt.subplots(figsize=(fig_size_in, fig_size_in), dpi=dpi)
+        self.ax.set_position([0, 0, 1, 1])
+        self.ax.margins(0)
 
-ax.set_xlim(0, window_size)
-ax.set_ylim(0, window_size)
-ax.set_box_aspect(1)
-ax.set_axis_off()
+        self.ax.set_xlim(0, window_size)
+        self.ax.set_ylim(0, window_size)
+        self.ax.set_box_aspect(1)
+        self.ax.set_axis_off()
 
-background = patches.Rectangle((0, 0), window_size, window_size, linewidth=1, edgecolor=colorGreen, facecolor=colorGreen, zorder=0)
-ax.add_patch(background)
+        background = patches.Rectangle((0, 0), window_size, window_size, linewidth=1, edgecolor=colorGreen, facecolor=colorGreen, zorder=0)
+        self.ax.add_patch(background)
 
-max_snake_len = max(len(frame) for frame in frames_data)
-body_patches = []
+        
+        self.body_patches = []
+        self.create_body_patches()
 
-food_rect = patches.Rectangle((0, 0), cell_size, cell_size, facecolor="r", zorder = 1)
-ax.add_patch(food_rect)
+        self.create_food_artist()
 
-for _ in range(max_snake_len):
-    rect = patches.Rectangle((0, 0), cell_size, cell_size, facecolor=colorDarkGreen, zorder = 1)
-    rect.set_visible(False)
-    ax.add_patch(rect)
-    body_patches.append(rect)
-
-
-def update(frame_idx):
-    body_coords = frames_data[frame_idx]
-    food_coord = food_data[frame_idx]
-
-    for i, rect in enumerate(body_patches):
-        if i < len(body_coords):
-            x, y = body_coords[i]
-            rect.set_xy((x * cell_size, y * cell_size))
-            rect.set_visible(True)
-        else:
+    def create_body_patches(self):
+        max_snake_len = max(len(frame) for frame in body_data)
+        for _ in range(max_snake_len):
+            rect = patches.Rectangle((0, 0), cell_size, cell_size, facecolor=colorDarkGreen, zorder = 1)
             rect.set_visible(False)
+            self.ax.add_patch(rect)
+            self.body_patches.append(rect)
 
-    food_rect.set_xy((food_coord[0] * cell_size, food_coord[1] * cell_size))
+    def create_food_artist(self):
+        food_path = os.path.join("graphics", "food.png")
+        food_img = mpimg.imread(food_path)
+
+        food_coord0 = (0, 0)
+        self.food_artist = self.ax.imshow(
+                               food_img,
+                               extent=[
+                                   food_coord0[0] * cell_size, (food_coord0[0] + 1) * cell_size,
+                                   food_coord0[1] * cell_size, (food_coord0[1] + 1) * cell_size
+                               ],
+                               zorder=3,
+                               interpolation="nearest",
+                           )
+
+
+    def update(self, frame_idx):
+        body_coords = body_data[frame_idx]
+        food_coord = food_data[frame_idx]
+
+        for i, rect in enumerate(self.body_patches):
+            if i < len(body_coords):
+                x, y = body_coords[i]
+                rect.set_xy((x * cell_size, y * cell_size))
+                rect.set_visible(True)
+            else:
+                rect.set_visible(False)
+
+        x_food, y_food = food_coord
+        self.food_artist.set_extent([
+            x_food * cell_size, (x_food + 1) * cell_size,
+            y_food * cell_size, (y_food + 1) * cell_size
+        ])
+        
+        # Careful here, only a shallow list copy
+        all_patches = self.body_patches + [self.food_artist]
     
-    # Careful here, only a shallow list copy
-    all_patches = body_patches + [food_rect]
+        return all_patches
 
-    return all_patches
+    def make_animation(self):
+        anim = FuncAnimation(
+                    self.fig,
+                    self.update,
+                    frames=len(body_data),
+                    interval=200,
+                    blit=True
+                )
 
+        writer = FFMpegWriter(fps = 5)
+        anim.save("test_animation.gif", writer=writer, dpi=self.dpi)
 
-anim = FuncAnimation(
-    fig,
-    update,
-    frames=len(frames_data),
-    interval=200,
-    blit=True
-)
+        plt.close()
 
-writer = FFMpegWriter(fps = 5)
-anim.save("test_animation.mp4", writer=writer)
+if __name__ == "__main__":
+    body_data = [
+        [(4, 1), (3, 1), (2, 1)], 
+        [(4, 2), (4, 1), (3, 1)],
+        [(4, 3), (4, 2), (4, 1)],
+        [(4, 4), (4, 3), (4, 2)],
+        [(5, 4), (4, 4), (4, 3)],
+        [(6, 4), (5, 4), (4, 4)]
+    ]
 
-plt.close()
+    food_data = [(4, 4), (4, 4), (4, 4), (7, 7), (7, 7), (7, 7)]
+
+    animator = Animator(body_data=body_data, food_data=food_data)
+    animator.make_animation()
