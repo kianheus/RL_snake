@@ -1,11 +1,15 @@
 {
     "agent_type": "Ego",
+    "occupance_size": 7,
     "nn_layers": [
         64,
-        64,
+        0,
         0,
         0,
         0
     ],
-    "occupance_size": 7
+    "lr": 0.001,
+    "gamma": 0.9,
+    "batch_size": 1000,
+    "max_memory": 10000
 }
