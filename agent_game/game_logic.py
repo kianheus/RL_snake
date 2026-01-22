@@ -1,6 +1,7 @@
 import pygame
 import numpy as np
 import time
+import copy
 from typing import List
 from agent_game.connectivity_checker import check_reachable
 
@@ -134,14 +135,26 @@ class Game():
         self.food = Food(self.snake.body)
         self.frame_iteration = 0
         self.score = 0
+        self.high_score = 0
         self.done = False
         self.control_type = control_type
         self.check_connected = check_connected
+
+        self.body_log = []
+        self.food_log = []
+
+        self.best_body_data = []
+        self.best_food_data = []
 
     def Reset(self):
         self.snake.Reset()
         self.food.position = self.food.GenerateRandomPos(self.snake.body)
         self.frame_iteration = 0
+        if self.score > self.high_score:
+            self.high_score = self.score
+            self.SaveRun()
+        self.body_log = []
+        self.food_log = []
         self.score = 0
         self.done = False
 
@@ -165,6 +178,8 @@ class Game():
         self.CheckCollisionWithEdges()
         self.CheckCollisionWithTail()
         self.FoodDistanceReward()
+
+        self.LogState()
 
         if self.frame_iteration > 100 * len(self.snake.body):
             self.GameOver()
@@ -225,15 +240,19 @@ class Game():
     def GameOver(self):
         self.reward = -30
         self.done = True
-        self.food.position = self.food.GenerateRandomPos(self.snake.body)
-        self.snake.Reset()
+        #self.food.position = self.food.GenerateRandomPos(self.snake.body)
         
 
+    def LogState(self):
+        body_frame = [tuple(part) for part in self.snake.body]
+        food_frame = tuple(self.food.position.tolist())
+        self.body_log.append(body_frame)
+        self.food_log.append(food_frame)
 
 if __name__ == "__main__":
-
-
-
+    def SaveRun(self):
+        self.best_body_data = copy.deepcopy(self.body_log)
+        self.best_food_data = copy.deepcopy(self.food_log)
 
 
     
