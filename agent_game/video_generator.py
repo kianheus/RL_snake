@@ -2,6 +2,8 @@ import matplotlib.pyplot as plt
 import matplotlib.patches as patches
 from matplotlib.animation import FuncAnimation, FFMpegWriter
 import matplotlib.image as mpimg
+import matplotlib
+matplotlib.use("Agg")
 import os
 
 
@@ -43,7 +45,7 @@ class Animator():
         self.create_food_artist()
 
     def create_body_patches(self):
-        max_snake_len = max(len(frame) for frame in body_data)
+        max_snake_len = max(len(frame) for frame in self.body_data)
         for _ in range(max_snake_len):
             rect = patches.Rectangle((0, 0), cell_size, cell_size, facecolor=colorDarkGreen, zorder = 1)
             rect.set_visible(False)
@@ -67,8 +69,8 @@ class Animator():
 
 
     def update(self, frame_idx):
-        body_coords = body_data[frame_idx]
-        food_coord = food_data[frame_idx]
+        body_coords = self.body_data[frame_idx]
+        food_coord = self.food_data[frame_idx]
 
         for i, rect in enumerate(self.body_patches):
             if i < len(body_coords):
@@ -89,16 +91,23 @@ class Animator():
     
         return all_patches
 
-    def make_animation(self):
+    def make_animation(self, hold_seconds=1.0, fps=20):
+        
+        hold_frames = int(hold_seconds * fps)
+
+        frame_indices = list(range(len(self.body_data))) + \
+                        [len(self.body_data) - 1] * hold_frames
+
         anim = FuncAnimation(
                     self.fig,
                     self.update,
-                    frames=len(body_data),
-                    interval=200,
+                    frames=frame_indices,
+                    interval=50,
                     blit=True
                 )
 
-        writer = FFMpegWriter(fps = 5)
+        writer = FFMpegWriter(fps=fps)
+        print("saving animation...")
         anim.save("test_animation.gif", writer=writer, dpi=self.dpi)
 
         plt.close()
