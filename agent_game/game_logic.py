@@ -249,23 +249,14 @@ class Game():
         self.body_log.append(body_frame)
         self.food_log.append(food_frame)
 
-if __name__ == "__main__":
     def SaveRun(self):
         self.best_body_data = copy.deepcopy(self.body_log)
         self.best_food_data = copy.deepcopy(self.food_log)
 
 
-    
-    game = Game()
+if __name__ == "__main__":
+    game = Game(control_type="relative")
 
-    action = STRAIGHT
-
-    game.screen.fill(colorGreen)
-    game.snake.Draw()
-    game.food.Draw()
-
-    pygame.display.flip()
-                
 
     WindowShouldClose = False
     while not WindowShouldClose:
@@ -291,9 +282,4 @@ if __name__ == "__main__":
 
                 print("reward:", reward, ", done:", done, ", score:", score)
 
-                game.screen.fill(colorGreen)
-                game.snake.Draw()
-                game.food.Draw()
-
-            pygame.display.flip()
     pygame.quit()
