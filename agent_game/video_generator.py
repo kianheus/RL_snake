@@ -114,7 +114,7 @@ class Animator():
                     self.fig,
                     self.update,
                     frames=frame_indices,
-                    interval=50,
+                    interval=int(1000/fps),
                     blit=True
                 )
 
