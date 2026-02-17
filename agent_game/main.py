@@ -120,7 +120,7 @@ if run_sim:
 
     game, record = train()
 
-    #animator = Animator(game.best_body_data, game.best_food_data)
-    #animator.make_animation()
+    animator = Animator(game.best_body_data, game.best_food_data)
+    animator.make_animation(save_path=save_path)
 
     

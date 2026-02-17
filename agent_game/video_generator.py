@@ -1,6 +1,6 @@
 import matplotlib.pyplot as plt
 import matplotlib.patches as patches
-from matplotlib.animation import FuncAnimation, FFMpegWriter
+from matplotlib.animation import FuncAnimation, PillowWriter
 import matplotlib.image as mpimg
 import matplotlib
 matplotlib.use("Agg")
@@ -17,7 +17,7 @@ window_size = cell_size * cell_count
 
 class Animator():
 
-    def __init__(self, body_data, food_data, target_px=1200, dpi=200):
+    def __init__(self, body_data, food_data, target_px=400, dpi=50):
         self.body_data = body_data
         self.food_data = food_data
         self.dpi = dpi
@@ -103,7 +103,7 @@ class Animator():
     
         return all_patches
 
-    def make_animation(self, hold_seconds=1.0, fps=20):
+    def make_animation(self, save_path, hold_seconds=1.0, fps=20):
         
         hold_frames = int(hold_seconds * fps)
 
@@ -115,12 +115,13 @@ class Animator():
                     self.update,
                     frames=frame_indices,
                     interval=int(1000/fps),
-                    blit=True
+                    blit=False
                 )
 
-        writer = FFMpegWriter(fps=fps)
+        writer = PillowWriter(fps=fps)
         print("saving animation...")
-        anim.save("test_animation.gif", writer=writer, dpi=self.dpi)
+        path = os.path.join(save_path, "best_run_animation.gif")
+        anim.save(path, writer=writer)#, dpi=self.dpi)
 
         plt.close()
 
