@@ -12,6 +12,9 @@ from agent_game.game_logic import Game
 from agent_game.plotter import plot
 from agent_game.video_generator import Animator
 
+from datetime import datetime
+import os
+
 agent_type = config.agent_type
 NN_layers = [layer for layer in config.nn_layers if layer != 0]
 occupance_size = config.occupance_size
@@ -20,6 +23,11 @@ MAX_MEMORY = config.max_memory
 BATCH_SIZE = config.batch_size
 LR = config.lr
 gamma = config.gamma
+
+timestamp = datetime.now().strftime("%Y_%m_%d-%H_%M_%S")
+
+save_dir = agent_type + "_" + timestamp
+save_path = os.path.join("agent_game", "results", save_dir)
 
 def train():
 
@@ -77,7 +85,7 @@ def train():
 
             if score > record:
                 record = score
-                agent.model.save()
+                agent.model.save(save_path=save_path)
             
             print("Game", agent.n_games, "Score", score, "Record:", record)
 
@@ -95,12 +103,12 @@ def train():
 
 
 if run_sim:
+
+    os.makedirs(save_path, exist_ok=False)
+
     game, record = train()
 
-    print("hi!!!")
-
-
-    animator = Animator(game.best_body_data, game.best_food_data)
-    animator.make_animation()
+    #animator = Animator(game.best_body_data, game.best_food_data)
+    #animator.make_animation()
 
     
