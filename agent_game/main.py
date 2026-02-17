@@ -14,6 +14,7 @@ from agent_game.video_generator import Animator
 
 from datetime import datetime
 import os
+import json
 
 agent_type = config.agent_type
 NN_layers = [layer for layer in config.nn_layers if layer != 0]
@@ -24,10 +25,19 @@ BATCH_SIZE = config.batch_size
 LR = config.lr
 gamma = config.gamma
 
-timestamp = datetime.now().strftime("%Y_%m_%d-%H_%M_%S")
+timestamp = datetime.now().strftime("%Y_%m_%d-%H_%M")
 
 save_dir = agent_type + "_" + timestamp
 save_path = os.path.join("agent_game", "results", save_dir)
+
+
+def save_model_data(save_path, config, record, n_games):
+    path = os.path.join(save_path, "model_data.json")
+    model_data = config.__dict__
+    model_data["record"] = record
+    model_data["n_games"] = n_games
+    with open(path, "w") as f:
+        json.dump(model_data, f, indent=4)
 
 def train():
 
@@ -85,7 +95,9 @@ def train():
 
             if score > record:
                 record = score
+                n_games = agent.n_games
                 agent.model.save(save_path=save_path)
+                save_model_data(save_path=save_path, config=config, record=record, n_games=n_games)
             
             print("Game", agent.n_games, "Score", score, "Record:", record)
 
