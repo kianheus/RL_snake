@@ -10,7 +10,7 @@ device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
 import agent_game.agent_architectures as agent_architectures
 from agent_game.game_logic import Game
-from agent_game.config.model import AgentType
+from agent_game.config.agent_config import AgentType
 
 
 class Agent():
