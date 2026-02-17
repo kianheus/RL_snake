@@ -7,7 +7,7 @@ config_dir = "agent_game/config/config_files"
 run_sim, active_profile, config = run_main_window(config_dir)
 
 import pygame
-from agent_game.agent_constructor import Agent
+from agent_game.agent import Agent
 from agent_game.game_logic import Game
 from agent_game.plotter import plot
 from agent_game.video_generator import Animator
