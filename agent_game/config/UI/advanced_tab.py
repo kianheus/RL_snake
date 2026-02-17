@@ -3,7 +3,7 @@ import PyQt6.QtCore as QtC
 import PyQt6.QtGui as QtG
 
 from agent_game.config.controller import ConfigController
-from agent_game.config.model import AgentType, AgentConfig
+from agent_game.config.agent_config import AgentType, AgentConfig
 
 class AdvancedTab(QtW.QWidget):
     def __init__(self, config_controller: ConfigController):
