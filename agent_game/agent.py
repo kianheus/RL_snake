@@ -8,7 +8,7 @@ from collections import deque
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 #warnings.filterwarnings("ignore")
 
-import agent_game.agent_types as agent_types
+import agent_game.agent_architectures as agent_architectures
 from agent_game.game_logic import Game
 from agent_game.config.model import AgentType
 
@@ -75,14 +75,14 @@ class Agent():
         MAX_MEMORY = kwargs.get("MAX_MEMORY")
 
         if agent_type == AgentType.BASIC:
-            net = agent_types.BasicAgent(NN_layers=kwargs["NN_layers"], 
-                                         LR=kwargs["LR"],
-                                         gamma=kwargs["gamma"])
+            net = agent_architectures.BasicAgent(NN_layers=kwargs["NN_layers"], 
+                                                 LR=kwargs["LR"],
+                                                 gamma=kwargs["gamma"])
         elif agent_type == AgentType.EGO:
-            net = agent_types.EgoAgent(NN_layers=kwargs["NN_layers"],
-                                       occupance_size=kwargs["occupance_size"],
-                                       LR=kwargs["LR"],
-                                       gamma=kwargs["gamma"])
+            net = agent_architectures.EgoAgent(NN_layers=kwargs["NN_layers"],
+                                               occupance_size=kwargs["occupance_size"],
+                                               LR=kwargs["LR"],
+                                               gamma=kwargs["gamma"])
         else:
             raise ValueError(f"Unknown agent type {agent_type}")
 
