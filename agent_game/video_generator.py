@@ -47,7 +47,18 @@ class Animator():
     def create_body_patches(self):
         max_snake_len = max(len(frame) for frame in self.body_data)
         for _ in range(max_snake_len):
-            rect = patches.Rectangle((0, 0), cell_size, cell_size, facecolor=colorDarkGreen, zorder = 1)
+            #rect = patches.Rectangle((0, 0), cell_size, cell_size, facecolor=colorDarkGreen, zorder = 1)
+            rect = patches.FancyBboxPatch(
+                        (0, 0),
+                        cell_size,
+                        cell_size,
+                        boxstyle="Round,pad=0.0,rounding_size=3",  # 5 pixels radius, tweak as needed
+                        linewidth=0,
+                        facecolor=colorDarkGreen,
+                        zorder=1
+                    )
+            
+            
             rect.set_visible(False)
             self.ax.add_patch(rect)
             self.body_patches.append(rect)
@@ -75,7 +86,8 @@ class Animator():
         for i, rect in enumerate(self.body_patches):
             if i < len(body_coords):
                 x, y = body_coords[i]
-                rect.set_xy((x * cell_size, y * cell_size))
+                #rect.set_xy((x * cell_size, y * cell_size))
+                rect.set_bounds(x * cell_size, y * cell_size, cell_size, cell_size)
                 rect.set_visible(True)
             else:
                 rect.set_visible(False)
