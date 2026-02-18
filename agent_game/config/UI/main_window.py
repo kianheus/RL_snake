@@ -20,11 +20,6 @@ class MainWindow(QtW.QMainWindow):
         self.pr = ProfileRepository(config_dir=config_dir)
         self.cc = ConfigController(pr=self.pr)
 
-        #self.profiles = self.pm.get_profiles_from_dir()
-        #self.active_profile = self.pm.active_profile
-        #self.config_data = self.pm.config_data
-        
-
         """     General window settings     """
 
         window_x = 150
