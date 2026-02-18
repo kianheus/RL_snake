@@ -54,25 +54,30 @@ class BasicAgent():
         dir_s = (game.snake.direction == SOUTH).all()
         dir_w = (game.snake.direction == WEST).all()
 
+        danger_n = game.CheckDanger(point_n)
+        danger_e = game.CheckDanger(point_e)
+        danger_s = game.CheckDanger(point_s)
+        danger_w = game.CheckDanger(point_w)
+
 
         state = [
             # Danger left
-            (dir_n and game.CheckDanger(point_w)) or
-            (dir_e and game.CheckDanger(point_n)) or
-            (dir_s and game.CheckDanger(point_e)) or
-            (dir_w and game.CheckDanger(point_s)),
+            (dir_n and danger_w) or
+            (dir_e and danger_n) or
+            (dir_s and danger_e) or
+            (dir_w and danger_s),
 
             # Danger straight
-            (dir_n and game.CheckDanger(point_n)) or
-            (dir_e and game.CheckDanger(point_e)) or
-            (dir_s and game.CheckDanger(point_s)) or
-            (dir_w and game.CheckDanger(point_w)),
+            (dir_n and danger_n) or
+            (dir_e and danger_e) or
+            (dir_s and danger_s) or
+            (dir_w and danger_w),
 
             # Danger right
-            (dir_n and game.CheckDanger(point_e)) or
-            (dir_e and game.CheckDanger(point_s)) or
-            (dir_s and game.CheckDanger(point_w)) or
-            (dir_w and game.CheckDanger(point_n)),
+            (dir_n and danger_e) or
+            (dir_e and danger_s) or
+            (dir_s and danger_w) or
+            (dir_w and danger_n),
 
             # Move directions, only one is true
             dir_n,
