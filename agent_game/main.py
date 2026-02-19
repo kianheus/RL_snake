@@ -2,6 +2,7 @@
 Main file to run RL snake simulations
 """
 from agent_game.config.UI.main_window import run_main_window
+from agent_game.config.UI.save_window import run_save_window
 
 config_dir = "agent_game/config/config_files"
 run_sim, active_profile, config = run_main_window(config_dir)
@@ -66,7 +67,7 @@ def train():
             if event.type == pygame.QUIT:
                 plt.close()
                 pygame.quit()
-                return game, record
+                return game, record, agent
 
         # Get old state
         state_old = agent.get_state(game)
@@ -99,9 +100,6 @@ def train():
 
             if score > record:
                 record = score
-                n_games = agent.n_games
-                agent.model.save(save_path=save_path)
-                save_model_data(save_path=save_path, config=config, record=record, n_games=n_games)
             
             print("Game", agent.n_games, "Score", score, "Record:", record)
 
@@ -115,16 +113,29 @@ def train():
             plot_mean_scores.append(mean_score)
             plotter.update(plot_scores, plot_mean_scores)
 
-    return game, record
+    return game, record, agent
 
 
 if run_sim:
+    game, record, agent = train()
 
-    os.makedirs(save_path, exist_ok=False)
+    save_info, save_weights, save_anim = run_save_window()
 
-    game, record = train()
+    if save_info or save_weights or save_anim:
+        os.makedirs(save_path, exist_ok=False)
 
-    animator = Animator(game.best_body_data, game.best_food_data)
-    animator.make_animation(save_path=save_path)
+    # Save simulation info at end of training
+    if save_info:
+        n_games = agent.n_games
+        save_model_data(save_path=save_path, config=config, record=record, n_games=n_games)
+
+    # Save network parameters at end of training
+    if save_weights:
+        agent.model.save(save_path=save_path)
+
+    # Save animation of BEST run
+    if save_anim:
+        animator = Animator(game.best_body_data, game.best_food_data)
+        animator.make_animation(save_path=save_path)
 
     
