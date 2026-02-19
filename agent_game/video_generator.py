@@ -3,7 +3,6 @@ import matplotlib.patches as patches
 from matplotlib.animation import FuncAnimation, PillowWriter
 import matplotlib.image as mpimg
 import matplotlib
-matplotlib.use("Agg")
 import os
 
 
