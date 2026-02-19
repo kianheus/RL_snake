@@ -9,9 +9,10 @@ run_sim, active_profile, config = run_main_window(config_dir)
 import pygame
 from agent_game.agent import Agent
 from agent_game.game_logic import Game
-from agent_game.plotter import plot
+from agent_game.plotter import TrainingPlotter
 from agent_game.video_generator import Animator
 
+import matplotlib.pyplot as plt
 from datetime import datetime
 import os
 import json
@@ -43,6 +44,8 @@ def train():
 
     plot_scores = []
     plot_mean_scores = []
+    plotter = TrainingPlotter()
+
     total_score = 0
     mean_window = 100
     record = 0
@@ -61,6 +64,7 @@ def train():
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
+                plt.close()
                 pygame.quit()
                 return game, record
 
@@ -109,7 +113,7 @@ def train():
                 mean_score = sum(plot_scores[-mean_window::])/mean_window
 
             plot_mean_scores.append(mean_score)
-            plot(plot_scores, plot_mean_scores)
+            plotter.update(plot_scores, plot_mean_scores)
 
     return game, record
 
