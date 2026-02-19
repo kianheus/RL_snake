@@ -5,9 +5,9 @@ class SaveWindow(QtW.QMainWindow):
     def __init__(self):
         super().__init__()
         
-        self.save_info = True
-        self.save_weights = True
-        self.save_anim = True
+        self.save_info = False
+        self.save_weights = False
+        self.save_anim = False
 
         """     General window settings     """
 
@@ -114,10 +114,6 @@ class SaveWindow(QtW.QMainWindow):
 
 
     def init_connections(self):
-        self.chb_info.stateChanged.connect(self.chb_info_changed)
-        self.chb_weights.stateChanged.connect(self.chb_weights_changed)
-        self.chb_anim.stateChanged.connect(self.chb_anim_changed)
-
         self.btn_select.clicked.connect(self.select_all_clicked)
         self.btn_deselect.clicked.connect(self.deselect_all_clicked)
         self.btn_save.clicked.connect(self.save_clicked)
@@ -131,15 +127,6 @@ class SaveWindow(QtW.QMainWindow):
         window_geometry.moveCenter(center_point)
         self.move(window_geometry.topLeft())
 
-    def chb_info_changed(self):
-        self.save_info = self.chb_info.isChecked()
-
-    def chb_weights_changed(self):
-        self.save_weights = self.chb_weights.isChecked()
-
-    def chb_anim_changed(self):
-        self.save_anim = self.chb_anim.isChecked()
-
     def select_all_clicked(self):
         self.chb_info.setChecked(True)
         self.chb_weights.setChecked(True)
@@ -151,6 +138,9 @@ class SaveWindow(QtW.QMainWindow):
         self.chb_anim.setChecked(False)
 
     def save_clicked(self):
+        self.save_info = self.chb_info.isChecked()
+        self.save_weights = self.chb_weights.isChecked()
+        self.save_anim = self.chb_anim.isChecked()
         self.window().close()
 
 
