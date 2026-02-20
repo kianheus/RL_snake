@@ -5,7 +5,8 @@ from enum import Enum
 
 class AgentType(str, Enum):
     BASIC = "Basic"
-    EGO = "Ego"
+    EGO = "Ego",
+    RAYCAST = "RayCast"
 
 @dataclass
 class AgentConfig:
