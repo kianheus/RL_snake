@@ -28,6 +28,15 @@ DIRECTIONS = [
     WEST
 ]
 
+def elementInBounds(element: np.ndarray) -> bool:
+    x = element[0]
+    y = element[1]
+
+    if x >= 0 and x < cell_count and y >= 0 and y < cell_count:
+        return True
+    else:
+        return False
+
 
 def elementInList(element: np.ndarray, list: List[np.ndarray]) -> bool:
 

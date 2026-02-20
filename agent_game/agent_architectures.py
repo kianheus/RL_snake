@@ -18,7 +18,7 @@ class directions():
 from agent_game.network import Linear_QNet
 from agent_game.trainer import QTrainer
 
-from agent_game.game_logic import Game, cell_count
+from agent_game.game_logic import Game, elementInBounds, elementInList
 
 
 class BasicAgent():
@@ -118,7 +118,7 @@ class EgoAgent():
     def get_trainer(self, model, target_model) -> QTrainer:
         return QTrainer(model=model, target_model=target_model, lr=self.LR, gamma=self.gamma)            
 
-    def ego_occupance_grid(self, game, size=5, cell_count=20):
+    def ego_occupance_grid(self, game, size=5):
         local_coords = [(dx, dy) for dy in range(-(size//2),size//2+1) for dx in range(-(size//2),size//2+1)]
         
         grid = np.zeros((size,size), dtype=int)
@@ -128,10 +128,12 @@ class EgoAgent():
             x, y = head[0] + dx, head[1] + dy
             
             # wall
-            if x < 0 or x >= cell_count or y < 0 or y >= cell_count:
+            #if x < 0 or x >= cell_count or y < 0 or y >= cell_count:
+            if not elementInBounds(np.array([x, y])):
                 grid[i//size, i%size] = 1
                 continue
-            
+
+
             # snake body
             for part in game.snake.body:
                 if x == part[0] and y == part[1]:
@@ -207,7 +209,7 @@ class EgoAgent():
             food_left = food_is_north
         
 
-        occupance_grid = self.ego_occupance_grid(game, size=self.occupance_size, cell_count=cell_count)
+        occupance_grid = self.ego_occupance_grid(game, size=self.occupance_size)
 
         state = np.concatenate((occupance_grid.flatten(), np.array([food_forward, food_left])))
 
