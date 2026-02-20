@@ -1,0 +1,17 @@
+{
+    "agent_type": "Basic",
+    "occupance_size": 0,
+    "nn_layers": [
+        64,
+        48,
+        32,
+        16,
+        8
+    ],
+    "lr": 0.001,
+    "gamma": 0.9,
+    "batch_size": 1000,
+    "max_memory": 10000,
+    "record": 58,
+    "n_games": 1310
+}
