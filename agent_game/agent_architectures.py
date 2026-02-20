@@ -216,6 +216,88 @@ class EgoAgent():
 
         return state
 
+class RayCastAgent():
+
+    def __init__(self, NN_layers, LR: float, gamma: float):
+        self.control_type = "absolute"
+        self.n_outputs = 4
+        self.NN_layers = NN_layers
+        self.LR = LR
+        self.gamma = gamma
+
+        print("I have been instantiated")
+
+    def get_model(self) -> Linear_QNet:
+        return Linear_QNet(26, self.NN_layers, self.n_outputs)
+    
+    def get_target_model(self, model: Linear_QNet) -> Linear_QNet:
+        target_model = Linear_QNet(26, self.NN_layers, self.n_outputs)
+        target_model.load_state_dict(model.state_dict())
+        target_model.eval()
+
+        return target_model
+    
+    def get_trainer(self, model, target_model) -> QTrainer:
+        return QTrainer(model=model, target_model=target_model, lr=self.LR, gamma=self.gamma)
+
+    def get_state(self, game: Game):
+        head = game.snake.body[0]
+
+        directions = [
+            (0, -1), #N
+            (1, -1), #NE
+            (1, 0),  #E
+            (1, 1),  #SE
+            (0, 1),  #S
+            (-1, 1), #SW
+            (-1, 0), #W
+            (-1, -1) #NW
+        ]
+
+        state = []
+
+        for dx, dy in directions:
+            wall_dist = 0
+            body_dist = 0
+            dist = 1
+            time_to_clear = 0
+
+            current = np.array([head[0] + dx, head[1] + dy])
+            
+            found_body = False
+
+            while elementInBounds(current):
+                if not found_body:
+                    body_idx = game.snake.body_map[current[0], current[1]]
+                    if body_idx != -1:
+                        body_dist = 1 / dist
+                        length = len(game.snake.body)
+
+                        time_to_clear = (length - body_idx) / length
+
+                        found_body = True
+
+                current += [dx, dy]
+                dist += 1
+
+            wall_dist = 1 / dist
+
+            state.extend([wall_dist, body_dist, time_to_clear])
+
+        food_x = game.food.position[0]
+        food_y = game.food.position[1]
+
+        head_x = head[0]
+        head_y = head[1]
+
+        food_is_north = int(food_y < head_y)
+        food_is_east = int(food_x > head_x)
+
+        state.extend([food_is_north, food_is_east])
+        
+        return np.array(state, dtype=float)
+
+
 
 if __name__ == "__main__":
     basic_agent = BasicAgent([128, 64, 64, 32], LR=0.001, gamma=0.9)
