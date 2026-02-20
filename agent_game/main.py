@@ -63,11 +63,21 @@ def train():
 
     while True:
 
+        step_triggered = False
+
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 plt.close()
                 pygame.quit()
                 return game, record, agent
+
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_SPACE:
+                    # When Space is pressed, trigger one single step
+                    step_triggered = True
+
+        #if not step_triggered:
+        #    continue
 
         # Get old state
         state_old = agent.get_state(game)
