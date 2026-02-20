@@ -11,3 +11,4 @@
 	a. Profile info
 	b. Neural network weights
 	c. Video of best run (score in title?)
+4. Add the learning trials epsilon as settings variable
