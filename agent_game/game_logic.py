@@ -73,6 +73,15 @@ class Snake():
             square = Square()
             screen.blit(square.surf, (x * cell_size, y * cell_size))
     
+    def update_body_map(self):
+        # Create a grid of -1s
+        self.body_map = np.full((cell_count, cell_count), -1)
+        # Fill the grid with the index of the snake body
+        for idx, segment in enumerate(self.body):
+            # segment is [x, y]
+            if elementInBounds(segment):
+                self.body_map[segment[0], segment[1]] = idx #Might want to flip indices, transposed right now
+                                                            #Flipping indices lobotomizes the agent, find out why!
 
     def Update(self, action, control_type):
 
@@ -83,12 +92,13 @@ class Snake():
             self.direction = absolute_action
         self.head = self.body[0] + self.direction
         self.body.insert(0, self.head)
-        
 
         if self.addSegment:
             self.addSegment = False
         else:
             self.body.pop()
+
+        self.update_body_map()
 
     def Reset(self):
         start_rand_n = np.random.randint(0, 4)
@@ -98,6 +108,7 @@ class Snake():
         self.head = np.array([start_x, start_y])
         self.body = [self.head, self.head + start_direction, self.head + start_direction * 2]
         self.direction = np.array([1, 0])
+        self.update_body_map()
 
     def RotateDirection(self, action):
         if action == LEFT:
