@@ -50,7 +50,7 @@ def train():
     total_score = 0
     mean_window = 100
     record = 0
-    agent = Agent.from_type(agent_type=agent_type,
+    agent = Agent.from_type(agent_type="RayCast",
                             NN_layers=NN_layers,
                             occupance_size=occupance_size,
                             LR=LR,
