@@ -57,7 +57,7 @@ class Agent():
 
     def get_action(self, state, train_len = 200):
         self.epsilon = train_len - self.n_games
-        final_move = [0, 0, 0]
+        final_move = [0] * self.net.n_outputs
         if random.randint(0, train_len*2) < self.epsilon:
             move = random.randint(0, 2)
             final_move[move] = 1

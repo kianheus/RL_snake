@@ -25,15 +25,16 @@ class BasicAgent():
 
     def __init__(self, NN_layers, LR: float, gamma: float):
         self.control_type = "relative"
+        self.n_outputs = 3
         self.NN_layers = NN_layers
         self.LR = LR
         self.gamma = gamma
 
     def get_model(self) -> Linear_QNet:
-        return Linear_QNet(11, self.NN_layers, 3)
+        return Linear_QNet(11, self.NN_layers, self.n_outputs)
     
     def get_target_model(self, model: Linear_QNet) -> Linear_QNet:
-        target_model = Linear_QNet(11, self.NN_layers, 3)
+        target_model = Linear_QNet(11, self.NN_layers, self.n_outputs)
         target_model.load_state_dict(model.state_dict())
         target_model.eval()
 
@@ -97,19 +98,18 @@ class BasicAgent():
 class EgoAgent():
 
     def __init__(self, NN_layers, occupance_size, LR, gamma):
-
         self.control_type = "relative"
-
+        self.n_outputs = 3
         self.NN_layers = NN_layers
         self.occupance_size = occupance_size 
         self.LR = LR
         self.gamma = gamma
 
     def get_model(self) -> Linear_QNet:
-        return Linear_QNet(self.occupance_size**2 + 2, self.NN_layers, 3)
+        return Linear_QNet(self.occupance_size**2 + 2, self.NN_layers, self.n_outputs)
     
     def get_target_model(self, model: Linear_QNet) -> Linear_QNet:
-        target_model = Linear_QNet(self.occupance_size**2 + 2, self.NN_layers, 3)
+        target_model = Linear_QNet(self.occupance_size**2 + 2, self.NN_layers, self.n_outputs)
         target_model.load_state_dict(model.state_dict())
         target_model.eval()
 
