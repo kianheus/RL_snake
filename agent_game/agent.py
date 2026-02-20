@@ -83,6 +83,10 @@ class Agent():
                                                occupance_size=kwargs["occupance_size"],
                                                LR=kwargs["LR"],
                                                gamma=kwargs["gamma"])
+        elif agent_type == AgentType.RAYCAST:
+            net = agent_architectures.RayCastAgent(NN_layers=kwargs["NN_layers"],
+                                                   LR=kwargs["LR"],
+                                                   gamma=kwargs["gamma"])
         else:
             raise ValueError(f"Unknown agent type {agent_type}")
 
