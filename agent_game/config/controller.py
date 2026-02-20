@@ -82,6 +82,7 @@ class ConfigController(QtC.QObject):
         else:
             self.config.occupance_size = 0
         
+        self.config.nn_layers = []
         for i, layer in enumerate(nn_layers):
             if not layer:
                 self.error_occurred.emit(
@@ -96,7 +97,7 @@ class ConfigController(QtC.QObject):
                     f"nn layer {i+1} too large."
                 )
                 return
-            self.config.nn_layers[i] = value
+            self.config.nn_layers.append(value)
         
         self.pr.save_profile(self.active_profile, self.config)
 
