@@ -1,14 +1,1 @@
-1. Simulation and visualization upgrades:
-	a. We want to log and visualize the best performance of a network
-	b. Simulator should keep track of full state of current simulation, and log it if it is the best score
-	c. Upon closing the program, the user should be prompted if he wants to save the training results.
-	d. If yes: the visualizer should rerun the best sim to save as .gif, and plot of the total
-	   training process.
-	e. In total, a saved training folder should contain: the model parameters, model nn weights and biases, video of 
-	best run, and plot of training.
-2. Try to create the online popular 8-directional feature representation as profile type.
-3. Save results of running a profile type to a folder. The folder should contain:
-	a. Profile info
-	b. Neural network weights
-	c. Video of best run (score in title?)
-4. Add the learning trials epsilon as settings variable
+1. Add the learning trials epsilon as settings variable
