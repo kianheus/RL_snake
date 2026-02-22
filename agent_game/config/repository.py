@@ -10,7 +10,7 @@ def create_config_filepath(config_dir, profile_name: str) -> str:
 
 class ProfileRepository():
 
-    core_profiles = ["basic_01", "ego_01"]
+    core_profiles = ["basic_01", "ego_01", "raycast_01"]
 
     def __init__(self, config_dir):
         self.config_dir = config_dir
