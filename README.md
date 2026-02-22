@@ -3,7 +3,7 @@
 
 
 ## How it's made
-<img src="demo_animation_(basic_46).gif" align="right" width="40%" />
+<img src="demo_animation_(basic_46).gif" align="right" width="30%" />
 
 **Tech used:** Python, PyTorch, PyQt6
 
