@@ -51,7 +51,7 @@ def train():
     mean_window = 100
     record = 0
 
-    target_model_interval = 20
+    target_model_interval = 10
 
     agent = Agent.from_type(agent_type=agent_type,
                             NN_layers=NN_layers,
