@@ -1,0 +1,12 @@
+name: rl-snake
+channels:
+  - defaults
+
+dependencies:
+  - python=3.12
+  - pip
+  - matplotlib
+  - pyqt
+  - pip:
+      - torch
+      - torchvision
