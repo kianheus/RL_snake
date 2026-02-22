@@ -210,10 +210,10 @@ class RayCastAgent():
         print("I have been instantiated")
 
     def get_model(self) -> Linear_QNet:
-        return Linear_QNet(18, self.NN_layers, self.n_outputs)
+        return Linear_QNet(24, self.NN_layers, self.n_outputs)
     
     def get_target_model(self, model: Linear_QNet) -> Linear_QNet:
-        target_model = Linear_QNet(18, self.NN_layers, self.n_outputs)
+        target_model = Linear_QNet(24, self.NN_layers, self.n_outputs)
         target_model.load_state_dict(model.state_dict())
         target_model.eval()
 
@@ -265,16 +265,27 @@ class RayCastAgent():
 
             state.extend([wall_dist, body_dist])
 
+        dir_n = (game.snake.direction == NORTH).all()
+        dir_e = (game.snake.direction == EAST).all()
+        dir_s = (game.snake.direction == SOUTH).all()
+        dir_w = (game.snake.direction == WEST).all()
+
+        state.extend([dir_n, dir_e, dir_s, dir_w])
+
         food_x = game.food.position[0]
         food_y = game.food.position[1]
 
         head_x = head[0]
         head_y = head[1]
 
-        food_is_north = int(food_y < head_y)
-        food_is_east = int(food_x > head_x)
+        food_n = int(food_y < head_y)
+        food_e = int(food_x > head_x)
+        food_s = int(food_y > head_y)
+        food_w = int(food_x < head_x)
 
-        state.extend([food_is_north, food_is_east])
+        state.extend([food_n, food_e, food_s, food_w])
+        
+
         
         return np.array(state, dtype=float)
 
