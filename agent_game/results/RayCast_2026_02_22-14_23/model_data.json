@@ -1,0 +1,15 @@
+{
+    "agent_type": "RayCast",
+    "occupance_size": 0,
+    "nn_layers": [
+        64,
+        32,
+        16
+    ],
+    "lr": 0.001,
+    "gamma": 0.97,
+    "batch_size": 1000,
+    "max_memory": 10000,
+    "record": 80,
+    "n_games": 1690
+}
