@@ -228,10 +228,10 @@ class RayCastAgent():
         print("I have been instantiated")
 
     def get_model(self) -> Linear_QNet:
-        return Linear_QNet(26, self.NN_layers, self.n_outputs)
+        return Linear_QNet(18, self.NN_layers, self.n_outputs)
     
     def get_target_model(self, model: Linear_QNet) -> Linear_QNet:
-        target_model = Linear_QNet(26, self.NN_layers, self.n_outputs)
+        target_model = Linear_QNet(18, self.NN_layers, self.n_outputs)
         target_model.load_state_dict(model.state_dict())
         target_model.eval()
 
@@ -269,11 +269,10 @@ class RayCastAgent():
             while elementInBounds(current):
                 if not found_body:
                     body_idx = game.snake.body_map[current[0], current[1]]
-                    if body_idx != -1:
+                    snake_len = len(game.snake.body)
+                    if body_idx != -1 and body_idx != (snake_len - 1): # Ignore body part if it is the tail
                         body_dist = 1 / dist
                         length = len(game.snake.body)
-
-                        time_to_clear = (length - body_idx) / length
 
                         found_body = True
 
@@ -282,7 +281,7 @@ class RayCastAgent():
 
             wall_dist = 1 / dist
 
-            state.extend([wall_dist, body_dist, time_to_clear])
+            state.extend([wall_dist, body_dist])
 
         food_x = game.food.position[0]
         food_y = game.food.position[1]
