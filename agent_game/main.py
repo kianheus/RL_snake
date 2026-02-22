@@ -51,6 +51,9 @@ def train():
     mean_window = 100
     record = 0
     agent = Agent.from_type(agent_type="RayCast",
+
+    target_model_interval = 20
+
                             NN_layers=NN_layers,
                             occupance_size=occupance_size,
                             LR=LR,
@@ -84,10 +87,6 @@ def train():
         # Get move
         final_action = agent.get_action(state_old)
 
-        if agent.n_games % 10 == 0:
-            agent.target_model.load_state_dict(agent.model.state_dict())
-
-
         # Perform move and get new state
         reward, done, score = game.Step(final_action)
 
@@ -103,6 +102,10 @@ def train():
 
 
         if done:
+
+            if agent.n_games % target_model_interval:
+                agent.target_model.load_state_dict(agent.model.state_dict())
+
             # Train long memory
             game.Reset()
             agent.n_games += 1
