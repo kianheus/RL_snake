@@ -3,15 +3,12 @@
 
 
 ## How it's made
-<figure style="float: right; width: 40%; text-align: center">
-    <img src="demo_animation_(basic_46).gif"/>
-    <figcaption> An example run, with score 46 </figcaption>
-</figure>
+<img src="demo_animation_(basic_46).gif" align="right" width="40%" />
 
 **Tech used:** Python, PyTorch, PyQt6
 
 
-I have developed a Python framework to configure, train and visualize reinforcement learning agents to play the classic Snake game. The agent plays on a 20x20 grid of open squares, and its goal is to collect as many "apples" as possible. Each apple eaten increases the snake's length. I used a Deep Q-Learning (DQN) approach to this problem, because it is beginner-friendly and good documentation exists online. To make the selection of agent type and hyperparameters more user-friendly, I created a PyQt6 UI. Details are 
+I have developed a Python framework to configure, train and visualize reinforcement learning agents to play the classic Snake game. The agent plays on a 20x20 grid of open squares, and its goal is to collect as many "apples" as possible. Each apple eaten increases the snake's length. I used a Deep Q-Learning (DQN) approach to this problem, because it is beginner-friendly and good documentation exists online. To make the selection of agent type and hyperparameters more user-friendly, I created a PyQt6 UI. Details of this interface are provided in the "Build and run" section below.
 
 <br>
 
