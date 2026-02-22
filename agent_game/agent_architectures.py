@@ -177,24 +177,6 @@ class EgoAgent():
         food_is_north = food_y < head_y
         food_is_east = food_x > head_x
 
-        """
-        dirs = directions()
-
-        match game.snake.direction:
-            case dirs.NORTH:
-                food_forward = food_is_north
-                food_left = not food_is_east
-            case dirs.EAST:
-                food_forward = food_is_east
-                food_left = not food_is_north
-            case dirs.SOUTH:
-                food_forward = not food_is_north
-                food_left = food_is_east
-            case dirs.WEST:
-                food_forward = not food_is_east
-                food_left = food_is_north
-
-        """
         if dir_n:
             food_forward = food_is_north
             food_left = not food_is_east
