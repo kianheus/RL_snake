@@ -1,9 +1,9 @@
 # **RL-snake**
- Reinforcement Learning an agent to play the classic snake game in Python
+ Reinforcement Learning an agent to play the classic snake game in Python.
 
 
 ## How it's made
-<img src="demo_animation_(basic_46).gif" align="right" width="30%" />
+<img src="graphics/demo_animation_(basic_46).gif" align="right" width="30%" />
 
 **Tech used:** Python, PyTorch, PyQt6
 
@@ -14,16 +14,9 @@ I have developed a Python framework to configure, train and visualize reinforcem
 
 I created 3 state possible state representations, which are listed as separate "agent architectures". These are:
 
-1. **Basic agent:** This state representation TODO: Fill in
-2. **Ego agent:** This representation contains a square grid around the snake head, with each point listed as either free space, wall, body part or food. Furthermore, the food direction relative to the head is added for cases when the food is further away. TODO: Something about this representation and convolution?
+1. **Basic agent:** This state representation contains an indication of immediate danger to the left, front and right of the snake head, as well as the snake direction and food direction.
+2. **Ego agent:** This representation contains a square grid around the snake head, with each point listed as either free space, wall, body part or food. Furthermore, the food direction relative to the head is added for cases when the food is further away.
 3. **RayCast agent:** This state representation is inspired by existing RL-projects [^link??], and features 8 "rays" which point from the snake head. Each ray gives information about the distance to walls, and the distance to body parts. Furthermore, the food direction is added to the state. This is conceptually similar to the basic agent, but provides a less near-sighted state.
-
-
-
-
-[^1]
-
-
 
 ## Results
 All three agent architectures are able to learn an effective basic strategy to gather food and avoid immediate danger. The basic agent averages at a score of around 25, with a high score of around 60 (after 1000 games). The ego agent performs slightly better, averaging 30 with a similar high score of around 60. The raycast agent with a larger neural network significantly outperformed the other agent architectures, averaging a score above 40, with a high score of 80. 
@@ -58,15 +51,17 @@ conda activate RL_snake
 python -m agent_game.main
 ```
 
-You will be prompted with a UI to select and create an agent profile, and choose hyperparameters. Once you have set up your simulation as desired, press "save and run" to run the simulation. After closing the PyGame simulation window, you will be prompted to save information about the training. Choose the options you want, and save, or close to abort. 
+You will be prompted with a UI to select and create an agent profile, and choose hyperparameters. Once you have set up your simulation as desired, press "save and run" to run the simulation. 
+
+<p float="left">
+<img src="graphics/UI_screen_main.png" width="49%" />
+<img src="graphics/UI_screen_advanced.png" width="49%" />
+</p>
+
+Running the simulation opens a pygame window and live plot showing the agent scores. After closing the PyGame simulation window, you will be prompted to save information about the training. Choose the options you want, and save, or close to abort. 
+
+
 ## Lessons learned
+This project gave me a good understanding of the fundamentals of Deep Q-Learning, including its shortcomings. Snake is a relatively simple game, yet already on small board sizes, the state space becomes too large for regular Q-Learning. My results generally agreed with common wisdom on hyperparameter tuning, but the vast number of independent parameters makes it difficult to know how performance may be improved. 
 
-
-Things I want to talk about:
-
-
-
-
-
-
-[^1] Hello
+I look forward to working with different forms of reinforcement learning and deep learning, but for now I have seen enough of this little guy running across my screen. :)
